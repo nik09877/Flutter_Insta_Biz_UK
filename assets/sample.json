@@ -1,0 +1,12 @@
+{
+    "creds":[
+        {
+            "email": "test@gmail.com",
+            "password": "test12"
+        },
+        {
+            "email": "abc@gmail.com",
+            "password": "abc12"
+        }
+    ]
+}
