@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myproject/pages/AppSetupPage.dart';
+import 'package:myproject/pages/homepage.dart';
+import 'package:myproject/pages/loginpage.dart';
 import 'accounts.dart';
 // import 'fundtransfer1.dart';
 import 'fund_transfer_screen.dart';
@@ -86,7 +89,12 @@ class _InstaBIZPageState extends State<InstaBIZPage> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AppSetupPage1()));
+                  },
                   icon: const Icon(Icons.logout),
                   color: Colors.white,
                 )

@@ -45,24 +45,25 @@ class _AccountsPageState extends State<AccountsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50.0),
         child: AppBar(
           backgroundColor: const Color.fromARGB(255, 179, 14, 14),
           title: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.menu),
                 color: Colors.white,
               ),
-              const Expanded(
-                child: Center(
-                  child: Text(
-                    "Accounts",
-                    style: TextStyle(color: Colors.white, fontSize: 12.0),
-                  ),
+              SizedBox(width: screenWidth * 0.2),
+              const Center(
+                child: Text(
+                  "Accounts",
+                  style: TextStyle(color: Colors.white, fontSize: 12.0),
                 ),
               ),
             ],
@@ -371,11 +372,11 @@ class _AccountsPageState extends State<AccountsPage> {
 
                                       // } : null,
                                       onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: ((context) =>
-                                                    const AccountsPage2())));
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: ((context) =>
+                                        //             const AccountsPage2())));
                                       },
                                       style: ElevatedButton.styleFrom(
                                         primary: const Color.fromARGB(

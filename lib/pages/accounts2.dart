@@ -41,7 +41,9 @@ class _AccountsPage2State extends State<AccountsPage2> {
           backgroundColor: Colors.red[600],
           leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {}),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
           title: Row(
             children: [
               IconButton(

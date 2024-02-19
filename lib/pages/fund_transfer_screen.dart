@@ -27,7 +27,7 @@ class _fundtransferState extends State<fundtransfer> {
   Map<int, String> selectedMap = {};
   List<Payer>? payers;
   List<Account>? userAccounts;
-
+  final RegExp amountRegex = RegExp(r'^\d+(\.\d{1,2})?$');
   final Map<int, String> radio1Values = {
     75617697: 'four',
     76261111: 'nov23adb',
@@ -328,7 +328,18 @@ class _fundtransferState extends State<fundtransfer> {
                                               floatingLabelBehavior:
                                                   FloatingLabelBehavior.always,
                                             ),
-                                            onChanged: (value) {},
+                                            onChanged: (value) {
+                                              _formKey.currentState!.validate();
+                                            },
+                                            validator: (value) {
+                                              if (value == null)
+                                                return "Enter Amount";
+                                              if (!amountRegex
+                                                  .hasMatch(value)) {
+                                                return 'Enter a valid amount';
+                                              }
+                                              return null;
+                                            },
                                           ),
                                           SizedBox(
                                             height: 5.0,
@@ -389,7 +400,9 @@ class _fundtransferState extends State<fundtransfer> {
                     width: double.infinity,
                     height: 40,
                     child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          // _formKey.currentState!.validate();
+                        },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.blue,
                           shape: RoundedRectangleBorder(

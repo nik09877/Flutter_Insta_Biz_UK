@@ -136,7 +136,7 @@ class _CrossCurrencyScreenState extends State<CrossCurrencyScreen> {
                                             fontSize: 14)),
                                     onChanged: (String? newValue) {
                                       setState(() {
-                                        // _selectedAccBal = newValue;
+                                        _selectedAccBal = newValue;
                                         isVisible1 = false;
                                         int accNo =
                                             int.parse(newValue!.split(' ')[0]);
@@ -695,121 +695,126 @@ class BottomSheetContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        Container(
-          child: Column(
-            children: [
-              Container(
-                height: 50,
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'Verify OTP',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.red[700],
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                  ],
-                ),
-              ),
-              Container(
-                height: 2,
-                color: Colors.red[900],
-              ),
-              Container(
-                color: Colors.grey[100],
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      'Please enter the OTP sent to the registered mobile number ${formatNumber(mobileNumber.toString())}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      width: 0.5 * MediaQuery.of(context).size.width,
-                      height: 40,
-                      child: TextField(
-                        controller: _otpcontroller,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(
-                              color: Colors.grey[700]!,
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Wrap(
+          children: [
+            Container(
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              'Verify OTP',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.red[700],
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                        onChanged: (value) {},
+                        Center(
+                          child: IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 2,
+                    color: Colors.red[900],
+                  ),
+                  Container(
+                    color: Colors.grey[100],
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Text(
+                          'Please enter the OTP sent to the registered mobile number ${formatNumber(mobileNumber.toString())}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          width: 0.5 * MediaQuery.of(context).size.width,
+                          height: 40,
+                          child: TextField(
+                            controller: _otpcontroller,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[700]!,
+                                ),
+                              ),
+                            ),
+                            onChanged: (value) {},
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        CountdownTimer(),
+                        SizedBox(
+                          height: 60,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => AppSetupPage2(),
+                        //   ),
+                        // );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      child: Text(
+                        'PROCEED',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CountdownTimer(),
-                    SizedBox(
-                      height: 60,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => AppSetupPage2(),
-                    //   ),
-                    // );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
                   ),
-                  child: Text(
-                    'PROCEED',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

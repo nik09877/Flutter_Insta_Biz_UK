@@ -136,39 +136,39 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: isLoginEnabled
                     ? () {
                         enteredMpin = convertControllersToInt(controllers);
-                        // if (user['mpin'] == enteredMpin) {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => InstaBIZPage(),
-                        //     ),
-                        //   );
-                        // } else {
-                        //   showDialog(
-                        //     context: context,
-                        //     builder: (BuildContext context) {
-                        //       return AlertDialog(
-                        //         title: Text("Error"),
-                        //         content: Text("Incorrect MPIN"),
-                        //         actions: [
-                        //           TextButton(
-                        //             onPressed: () {
-                        //               Navigator.of(context).pop();
-                        //             },
-                        //             child: Text("OK"),
-                        //           ),
-                        //         ],
-                        //       );
-                        //     },
-                        //   );
-                        // }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                InstaBIZPage(userId: user['userId']),
-                          ),
-                        );
+                        if (user['mpin'] == enteredMpin) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  InstaBIZPage(userId: user['userId']),
+                            ),
+                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => InstaBIZPage(),
+                          //   ),
+                          // );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Error"),
+                                content: Text("Incorrect MPIN"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("OK"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
                       }
                     : null,
                 style: ElevatedButton.styleFrom(

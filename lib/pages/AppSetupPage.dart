@@ -792,11 +792,16 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                   width: double.infinity,
                   height: 40,
                   child: ElevatedButton(
-                    onPressed: isButtonEnabled
-                        ? () {
-                            callbottomsheet();
-                          }
-                        : null,
+                    onPressed:
+                        _mpincontroller.text == _confirmmpincontroller.text &&
+                                isButtonEnabled
+                            ? () {
+                                // http.put(
+                                //     Uri.parse('http://10.101.151.42:3000/users/'),
+                                //     body: {});
+                                callbottomsheet();
+                              }
+                            : null,
                     style: ElevatedButton.styleFrom(
                       primary: Colors.blue,
                       disabledBackgroundColor:
