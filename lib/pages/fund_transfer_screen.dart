@@ -661,19 +661,21 @@ class _fundtransferState extends State<fundtransfer> {
                     width: double.infinity,
                     height: 40,
                     child: ElevatedButton(
-                        onPressed: () {
-                          // _formKey.currentState!.validate();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
+                      onPressed: () {
+                        // _formKey.currentState!.validate();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
                         ),
-                        child: Text('PROCEED',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white))),
+                      ),
+                      child: Text(
+                        'PROCEED',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
                   ),
                 ],
               )

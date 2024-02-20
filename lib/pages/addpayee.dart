@@ -413,12 +413,12 @@ class _AddPayeeState extends State<AddPayee> {
         labelText: labelText,
         //suffixText:isMandatory ? '*':'',
         // suffixStyle:TextStyle(color:Colors.red),
-        prefix: isMandatory
-            ? Text(
-                ' *',
-                style: TextStyle(fontSize: 12, color: Colors.red),
-              )
-            : null,
+        // prefix: isMandatory
+        //     ? Text(
+        //         ' *',
+        //         style: TextStyle(fontSize: 12, color: Colors.red),
+        //       )
+        //     : null,
         labelStyle: TextStyle(fontSize: 12, color: Colors.grey),
       ),
       /* validator: (value) {

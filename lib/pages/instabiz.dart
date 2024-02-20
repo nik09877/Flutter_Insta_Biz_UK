@@ -29,6 +29,12 @@ class _InstaBIZPageState extends State<InstaBIZPage> {
     // DefaultPage(userId: widget.userId),
     const Center(
       child: Text(
+        "My Home",
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
+    const Center(
+      child: Text(
         "My Profile",
         style: TextStyle(color: Colors.white),
       ),
@@ -431,7 +437,9 @@ class _DefaultPageState extends State<DefaultPage> {
       ];
 
       setState(() {
-        accounts = userAccounts;
+        accounts = userAccounts
+            .where((account) => account["userId"] == widget.userId)
+            .toList();
       });
       // } else {
       //   throw Exception('Error...');
