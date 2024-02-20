@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:local_auth/local_auth.dart';
+import 'package:myproject/pages/instabiz.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'loginpage.dart';
 
@@ -346,6 +347,11 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
                           String enteredUserID = _IDController.text;
                           String enteredPassword = _passwordController.text;
 
+                          // if (enteredUserID == "admin" &&
+                          //     enteredPassword == "admin") {
+                          //   enteredUserID = "100000003";
+                          //   enteredPassword = "Personc123@";
+                          // }
                           var user = users.firstWhere(
                             (user) =>
                                 user['userId'] == int.parse(enteredUserID),
@@ -693,6 +699,12 @@ class AppSetupPage2 extends StatefulWidget {
   State<AppSetupPage2> createState() => _AppSetupPage2State();
 }
 
+enum _SupportState {
+  unknown,
+  supported,
+  unsupported,
+}
+
 class _AppSetupPage2State extends State<AppSetupPage2> {
   final _mpincontroller = TextEditingController();
   final _confirmmpincontroller = TextEditingController();
@@ -700,57 +712,12 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
   bool isButtonEnabled = false;
   late Map<String, dynamic> user;
 
-  // bool _isAuthenticating = false;
-  // String _authorized = 'Not Authorized';
   final LocalAuthentication auth = LocalAuthentication();
-
-  Future<void> _authenticateWithBiometrics(BuildContext context) async {
-    bool authenticated = false;
-    try {
-      // setState(() {
-      //   _isAuthenticating = true;
-      //   _authorized = 'Authenticating';
-      // });
-      authenticated = await auth.authenticate(
-        localizedReason: 'Scan your fingerprint to authenticate',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: true,
-        ),
-      );
-      // setState(() {
-      //   _isAuthenticating = false;
-      //   _authorized = 'Authenticating';
-      // });
-    } on PlatformException catch (e) {
-      print(e);
-      // setState(() {
-      //   _isAuthenticating = false;
-      //   _authorized = 'Error - ${e.message}';
-      // });
-      return;
-    }
-    if (!mounted) {
-      return;
-    }
-    if (authenticated) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginPage(user: user),
-        ),
-      );
-    }
-    // final String message = authenticated ? 'Authorized' : 'Not Authorized';
-    // setState(() {
-    //   _authorized = message;
-    // });
-  }
-
-  // Future<void> _cancelAuthentication() async {
-  //   await auth.stopAuthentication();
-  //   // setState(() => _isAuthenticating = false);
-  // }
+  _SupportState _supportState = _SupportState.unknown;
+  bool? _canCheckBiometrics;
+  List<BiometricType>? _availableBiometrics;
+  String _authorized = 'Not Authorized';
+  bool _isAuthenticating = false;
 
   @override
   void initState() {
@@ -758,6 +725,134 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
     _mpincontroller.addListener(_checkButtonEnabled);
     _confirmmpincontroller.addListener(_checkButtonEnabled);
     user = widget.user;
+    auth.isDeviceSupported().then(
+          (bool isSupported) => setState(() => _supportState = isSupported
+              ? _SupportState.supported
+              : _SupportState.unsupported),
+        );
+  }
+
+  Future<void> _checkBiometrics() async {
+    late bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      canCheckBiometrics = false;
+      print(e);
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _canCheckBiometrics = canCheckBiometrics;
+    });
+  }
+
+  Future<void> _getAvailableBiometrics() async {
+    late List<BiometricType> availableBiometrics;
+    try {
+      availableBiometrics = await auth.getAvailableBiometrics();
+    } on PlatformException catch (e) {
+      availableBiometrics = <BiometricType>[];
+      print(e);
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _availableBiometrics = availableBiometrics;
+    });
+  }
+
+  Future<void> _authenticate() async {
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+      authenticated = await auth.authenticate(
+        localizedReason: 'Scan your fingerprint to authenticate',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+        ),
+      );
+      setState(() {
+        _isAuthenticating = false;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Error - ${e.message}';
+      });
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(
+        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+    if (authenticated) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InstaBIZPage(userId: user["userId"]),
+        ),
+      );
+    }
+  }
+
+  Future<void> _authenticateWithBiometrics() async {
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+      authenticated = await auth.authenticate(
+        localizedReason: 'Scan your fingerprint to authenticate',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
+      );
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Authenticating';
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Error - ${e.message}';
+      });
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+
+    final String message = authenticated ? 'Authorized' : 'Not Authorized';
+    setState(() {
+      _authorized = message;
+    });
+    if (authenticated) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InstaBIZPage(userId: user["userId"]),
+        ),
+      );
+    }
+  }
+
+  Future<void> _cancelAuthentication() async {
+    await auth.stopAuthentication();
+    setState(() => _isAuthenticating = false);
   }
 
   void _checkButtonEnabled() {
@@ -956,9 +1051,18 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                       width: 0.45 * MediaQuery.of(context).size.width,
                       height: 40,
                       child: ElevatedButton(
-                        onPressed: () {
-                          _authenticateWithBiometrics(context);
-                        },
+                        // onPressed: () {
+                        //   // _authenticateWithBiometrics(context);
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) =>
+                        //           InstaBIZPage(userId: user["userId"]),
+                        //     ),
+                        //   );
+                        // },
+                        onPressed: _authenticate,
+                        // onPressed: _authenticateWithBiometrics,
                         style: ElevatedButton.styleFrom(
                           primary: Color.fromARGB(255, 2, 35, 61),
                           shape: RoundedRectangleBorder(
@@ -975,7 +1079,15 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                       width: 0.45 * MediaQuery.of(context).size.width,
                       height: 40,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  InstaBIZPage(userId: user["userId"]),
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           primary: Color.fromARGB(255, 2, 35, 61),
                           shape: RoundedRectangleBorder(
