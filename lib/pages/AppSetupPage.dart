@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:local_auth/local_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'loginpage.dart';
 
@@ -40,16 +41,54 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
 
   Future<void> fetchData() async {
     try {
-      final response =
-          await http.get(Uri.parse('http://10.101.151.42:3000/users'));
-      if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        setState(() {
-          users = data.map((item) => Map<String, dynamic>.from(item)).toList();
-        });
-      } else {
-        throw Exception('Error...');
-      }
+      // final response =
+      //     await http.get(Uri.parse('http://192.168.226.12:3000/users'));
+      // if (response.statusCode == 200) {
+      // List<dynamic> data = json.decode(response.body);
+      List<dynamic> data = [
+        {
+          "name": "Person A",
+          "mobileNumber": 1234567890,
+          "userId": 100000001,
+          "password": "Persona123@",
+          "mpin": 123456,
+          "fingerprint": false,
+          "lastVisited": "2024-02-14T09:00:00Z"
+        },
+        {
+          "name": "Person B",
+          "mobileNumber": 9876543210,
+          "userId": 100000002,
+          "password": "Personb123@",
+          "mpin": 123123,
+          "fingerprint": false,
+          "lastVisited": "2024-02-13T10:00:00Z"
+        },
+        {
+          "name": "Person C",
+          "mobileNumber": 9876543210,
+          "userId": 100000003,
+          "password": "Personc123@",
+          "mpin": null,
+          "fingerprint": false,
+          "lastVisited": "2024-02-12T11:00:00Z"
+        },
+        {
+          "name": "Person 4",
+          "mobileNumber": 9876543210,
+          "userId": 100000004,
+          "password": "Personc123@",
+          "mpin": null,
+          "fingerprint": false,
+          "lastVisited": "2024-02-12T11:00:00Z"
+        }
+      ];
+      setState(() {
+        users = data.map((item) => Map<String, dynamic>.from(item)).toList();
+      });
+      // } else {
+      //   throw Exception('Error...');
+      // }
     } catch (error) {
       print('Error: $error');
     }
@@ -661,6 +700,58 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
   bool isButtonEnabled = false;
   late Map<String, dynamic> user;
 
+  // bool _isAuthenticating = false;
+  // String _authorized = 'Not Authorized';
+  final LocalAuthentication auth = LocalAuthentication();
+
+  Future<void> _authenticateWithBiometrics(BuildContext context) async {
+    bool authenticated = false;
+    try {
+      // setState(() {
+      //   _isAuthenticating = true;
+      //   _authorized = 'Authenticating';
+      // });
+      authenticated = await auth.authenticate(
+        localizedReason: 'Scan your fingerprint to authenticate',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
+      );
+      // setState(() {
+      //   _isAuthenticating = false;
+      //   _authorized = 'Authenticating';
+      // });
+    } on PlatformException catch (e) {
+      print(e);
+      // setState(() {
+      //   _isAuthenticating = false;
+      //   _authorized = 'Error - ${e.message}';
+      // });
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+    if (authenticated) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(user: user),
+        ),
+      );
+    }
+    // final String message = authenticated ? 'Authorized' : 'Not Authorized';
+    // setState(() {
+    //   _authorized = message;
+    // });
+  }
+
+  // Future<void> _cancelAuthentication() async {
+  //   await auth.stopAuthentication();
+  //   // setState(() => _isAuthenticating = false);
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -797,7 +888,7 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                                 isButtonEnabled
                             ? () {
                                 // http.put(
-                                //     Uri.parse('http://10.101.151.42:3000/users/'),
+                                //     Uri.parse('http://192.168.226.12:3000/users/'),
                                 //     body: {});
                                 callbottomsheet();
                               }
@@ -866,12 +957,7 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(user: user),
-                            ),
-                          );
+                          _authenticateWithBiometrics(context);
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Color.fromARGB(255, 2, 35, 61),

@@ -131,20 +131,106 @@ class _DefaultHomePageState extends State<DefaultHomePage> {
 
   Future<void> fetchData() async {
     try {
-      final response =
-          await http.get(Uri.parse('http://10.101.151.42:3000/transactions'));
-      if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        setState(() {
-          // Filter data based on userId
-          ministatements = data
-              .where((transaction) => transaction['userId'] == widget.userId)
-              .map((item) => Map<String, dynamic>.from(item))
-              .toList();
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
+      // final response =
+      //     await http.get(Uri.parse('http://192.168.226.12:3000/transactions'));
+      // if (response.statusCode == 200) {
+      // List<dynamic> data = json.decode(response.body);
+      List<dynamic> data = [
+        {
+          "userId": 100000001,
+          "transactionId": "ATRX001",
+          "transactionDate": "2024-02-15",
+          "amount": 0.01,
+          "remarks": "A UBR/CIB-4653123/GBP/bcx"
+        },
+        {
+          "userId": 100000001,
+          "transactionId": "ATRX002",
+          "transactionDate": "2024-02-14",
+          "amount": 0.01,
+          "remarks": "A UBR/CIB-4653122/GBP/bcx"
+        },
+        {
+          "userId": 100000001,
+          "transactionId": "ATRX003",
+          "transactionDate": "2024-02-13",
+          "amount": 1.0,
+          "remarks": "A CUK/000046522341/Utility"
+        },
+        {
+          "userId": 100000001,
+          "transactionId": "ATRX004",
+          "transactionDate": "2024-02-12",
+          "amount": 0.01,
+          "remarks": "A UBR/CIB-4647104/GBP/ABANS GLOBAL"
+        },
+        {
+          "userId": 100000002,
+          "transactionId": "BTRX001",
+          "transactionDate": "2024-02-15",
+          "amount": 0.01,
+          "remarks": "B UBR/CIB-4653123/GBP/bcx"
+        },
+        {
+          "userId": 100000002,
+          "transactionId": "BTRX002",
+          "transactionDate": "2024-02-14",
+          "amount": 0.01,
+          "remarks": "B UBR/CIB-4653123/GBP/bcx"
+        },
+        {
+          "userId": 100000002,
+          "transactionId": "BTRX003",
+          "transactionDate": "2024-02-13",
+          "amount": 0.01,
+          "remarks": "B UBR/CIB-4653123/GBP/bcx"
+        },
+        {
+          "userId": 100000002,
+          "transactionId": "BTRX004",
+          "transactionDate": "2024-02-12",
+          "amount": 0.01,
+          "remarks": "B UBR/CIB-4653123/GBP/bcx"
+        },
+        {
+          "userId": 100000003,
+          "transactionId": "CTRX003",
+          "transactionDate": "2024-02-13",
+          "amount": 0.01,
+          "remarks": "C UBR/CIB-4653123/GBP/bcx"
+        },
+        {
+          "userId": 100000003,
+          "transactionId": "CTRX004",
+          "transactionDate": "2024-02-12",
+          "amount": 0.01,
+          "remarks": "C UBR/CIB-4653123/GBP/bcx"
+        },
+        {
+          "userId": 100000004,
+          "transactionId": "DTRX003",
+          "transactionDate": "2024-02-13",
+          "amount": 0.01,
+          "remarks": "D UBR/CIB-4653123/GBP/bcx"
+        },
+        {
+          "userId": 100000004,
+          "transactionId": "DTRX004",
+          "transactionDate": "2024-02-12",
+          "amount": 0.01,
+          "remarks": "D UBR/CIB-4653123/GBP/bcx"
+        }
+      ];
+      setState(() {
+        // Filter data based on userId
+        ministatements = data
+            .where((transaction) => transaction['userId'] == widget.userId)
+            .map((item) => Map<String, dynamic>.from(item))
+            .toList();
+      });
+      // } else {
+      //   throw Exception('Failed to load data');
+      // }
     } catch (error) {
       print('Error: $error');
     }
@@ -152,7 +238,7 @@ class _DefaultHomePageState extends State<DefaultHomePage> {
   // void fetchData() async {
   //   try {
   //     final response =
-  //         await get(Uri.parse('http://10.101.151.42:3000/transactions'));
+  //         await get(Uri.parse('http://192.168.226.12:3000/transactions'));
   //     final jsonData = jsonDecode(response.body) as List;
   //     setState(() {
   //       ministatement1 = jsonData;

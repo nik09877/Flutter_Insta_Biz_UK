@@ -78,7 +78,178 @@ class _fundtransferState extends State<fundtransfer> {
 
   Future getAllAccounts(int userId) async {
     try {
-      final data = await ApiService().getAllAccounts(widget.userId);
+      // final data = await ApiService().getAllAccounts(widget.userId);
+      final data_temp = [
+        {
+          "name": "John Doe",
+          "userId": 100000001,
+          "accountNumber": 1001,
+          "currency": "USD",
+          "balance": 5000,
+          "openingDate": "2023-05-10",
+          "branch": "Main Street",
+          "customerId": 5001,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Jane Smith",
+          "userId": 100000002,
+          "accountNumber": 1002,
+          "currency": "EUR",
+          "balance": 8000,
+          "openingDate": "2023-08-20",
+          "branch": "Downtown",
+          "customerId": 5002,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Alice Johnson",
+          "userId": 100000003,
+          "accountNumber": 1003,
+          "currency": "GBP",
+          "balance": 12000,
+          "openingDate": "2022-12-05",
+          "branch": "Uptown",
+          "customerId": 5003,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Bob Brown",
+          "userId": 100000001,
+          "accountNumber": 1004,
+          "currency": "JPY",
+          "balance": 3000,
+          "openingDate": "2024-01-15",
+          "branch": "Suburb",
+          "customerId": 5004,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Charlie Wilson",
+          "userId": 100000002,
+          "accountNumber": 1005,
+          "currency": "CAD",
+          "balance": 15000,
+          "openingDate": "2023-11-30",
+          "branch": "Midtown",
+          "customerId": 5005,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Diana Garcia",
+          "userId": 100000003,
+          "accountNumber": 1006,
+          "currency": "AUD",
+          "balance": 10000,
+          "openingDate": "2023-02-22",
+          "branch": "Downtown",
+          "customerId": 5006,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Eva Martinez",
+          "userId": 100000001,
+          "accountNumber": 1007,
+          "currency": "EUR",
+          "balance": 7500,
+          "openingDate": "2024-03-05",
+          "branch": "Uptown",
+          "customerId": 5007,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Frank Miller",
+          "userId": 100000002,
+          "accountNumber": 1008,
+          "currency": "USD",
+          "balance": 9000,
+          "openingDate": "2023-06-12",
+          "branch": "Main Street",
+          "customerId": 5008,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Grace Taylor",
+          "userId": 100000003,
+          "accountNumber": 1009,
+          "currency": "GBP",
+          "balance": 11000,
+          "openingDate": "2024-04-18",
+          "branch": "Downtown",
+          "customerId": 5009,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Henry Lewis",
+          "userId": 100000001,
+          "accountNumber": 1010,
+          "currency": "CAD",
+          "balance": 6000,
+          "openingDate": "2023-09-25",
+          "branch": "Midtown",
+          "customerId": 5010,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Ivy Turner",
+          "userId": 100000002,
+          "accountNumber": 1011,
+          "currency": "USD",
+          "balance": 9500,
+          "openingDate": "2023-10-08",
+          "branch": "Suburb",
+          "customerId": 5011,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Jack Harris",
+          "userId": 100000003,
+          "accountNumber": 1012,
+          "currency": "JPY",
+          "balance": 13000,
+          "openingDate": "2024-05-14",
+          "branch": "Uptown",
+          "customerId": 5012,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Kelly White",
+          "userId": 100000001,
+          "accountNumber": 1013,
+          "currency": "CAD",
+          "balance": 7200,
+          "openingDate": "2023-07-01",
+          "branch": "Downtown",
+          "customerId": 5013,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Leo Rodriguez",
+          "userId": 100000002,
+          "accountNumber": 1014,
+          "currency": "GBP",
+          "balance": 10500,
+          "openingDate": "2024-02-28",
+          "branch": "Main Street",
+          "customerId": 5014,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Mia Brown",
+          "userId": 100000003,
+          "accountNumber": 1015,
+          "currency": "USD",
+          "balance": 8800,
+          "openingDate": "2023-04-16",
+          "branch": "Midtown",
+          "customerId": 5015,
+          "accountType": "Savings"
+        }
+      ];
+      final data = data_temp
+          .map((account) => Account.fromJson(account))
+          .where((account) => account.userId == userId)
+          .toList();
       setState(() {
         userAccounts = data;
       });
@@ -89,7 +260,97 @@ class _fundtransferState extends State<fundtransfer> {
 
   Future getAllPayers(int userId) async {
     try {
-      final data = await ApiService().getAllPayers(widget.userId);
+      // final data = await ApiService().getAllPayers(widget.userId);
+      final data_temp = [
+        {
+          "payerName": "Person A Payer 1",
+          "currency": "USD",
+          "accountNumber": "123456789",
+          "userId": 100000001,
+          "payerType": "Type1"
+        },
+        {
+          "payerName": "Person A Payer 2",
+          "currency": "EUR",
+          "accountNumber": "987654321",
+          "userId": 100000001,
+          "payerType": "Type2"
+        },
+        {
+          "payerName": "Person A Payer 3",
+          "currency": "GBP",
+          "accountNumber": "111122223333",
+          "userId": 100000001,
+          "payerType": "Type3"
+        },
+        {
+          "payerName": "Person A Payer 4",
+          "currency": "JPY",
+          "accountNumber": "444455556666",
+          "userId": 100000001,
+          "payerType": "Type4"
+        },
+        {
+          "payerName": "Person B Payer 1",
+          "currency": "USD",
+          "accountNumber": "123456789",
+          "userId": 100000002,
+          "payerType": "Type1"
+        },
+        {
+          "payerName": "Person B Payer 2",
+          "currency": "EUR",
+          "accountNumber": "987654321",
+          "userId": 100000002,
+          "payerType": "Type2"
+        },
+        {
+          "payerName": "Person B Payer 3",
+          "currency": "GBP",
+          "accountNumber": "111122223333",
+          "userId": 100000002,
+          "payerType": "Type3"
+        },
+        {
+          "payerName": "Person B Payer 4",
+          "currency": "JPY",
+          "accountNumber": "444455556666",
+          "userId": 100000002,
+          "payerType": "Type4"
+        },
+        {
+          "payerName": "Person C Payer 1",
+          "currency": "USD",
+          "accountNumber": "123456789",
+          "userId": 100000003,
+          "payerType": "Type1"
+        },
+        {
+          "payerName": "Person C Payer 2",
+          "currency": "EUR",
+          "accountNumber": "987654321",
+          "userId": 100000003,
+          "payerType": "Type2"
+        },
+        {
+          "payerName": "Person C Payer 3",
+          "currency": "GBP",
+          "accountNumber": "111122223333",
+          "userId": 100000003,
+          "payerType": "Type3"
+        },
+        {
+          "payerName": "Person C Payer 4",
+          "currency": "JPY",
+          "accountNumber": "444455556666",
+          "userId": 100000003,
+          "payerType": "Type4"
+        }
+      ];
+      final data = data_temp
+          .map((payer) => Payer.fromJson(payer))
+          .where((payer) => payer.userId == userId)
+          .toList();
       setState(() {
         payers = data;
       });

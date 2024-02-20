@@ -5,9 +5,9 @@ import 'package:myproject/models/account_model.dart';
 import 'package:myproject/models/payer_model.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.101.151.42:3000';
-  // static const String baseUrl = 'http://10.101.151.42:3000';
-  // static const String baseUrl = 'http://10.101.151.42:3000';
+  static const String baseUrl = 'http://192.168.226.12:3000';
+  // static const String baseUrl = 'http://192.168.226.12:3000';
+  // static const String baseUrl = 'http://192.168.226.12:3000';
 
   Future<List<Account>> getAllAccounts(int userId) async {
     try {

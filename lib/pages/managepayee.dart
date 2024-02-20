@@ -201,20 +201,106 @@ class _PayeeListScreenState extends State<PayeeListScreen> {
 
   Future<void> fetchData() async {
     try {
-      final response =
-          await http.get(Uri.parse('http://10.101.151.42:3000/payers'));
-      if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        setState(() {
-          // Filter data based on userId
-          payees = data
-              .where((payee) => payee['userId'] == widget.userId)
-              .map((item) => Map<String, dynamic>.from(item))
-              .toList();
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
+      //   final response =
+      //       await http.get(Uri.parse('http://192.168.226.12:3000/payers'));
+      //   if (response.statusCode == 200) {
+      // List<dynamic> data = json.decode(response.body);
+      List<dynamic> data = [
+        {
+          "payerName": "Person A Payer 1",
+          "currency": "USD",
+          "accountNumber": "123456789",
+          "userId": 100000001,
+          "payerType": "Type1"
+        },
+        {
+          "payerName": "Person A Payer 2",
+          "currency": "EUR",
+          "accountNumber": "987654321",
+          "userId": 100000001,
+          "payerType": "Type2"
+        },
+        {
+          "payerName": "Person A Payer 3",
+          "currency": "GBP",
+          "accountNumber": "111122223333",
+          "userId": 100000001,
+          "payerType": "Type3"
+        },
+        {
+          "payerName": "Person A Payer 4",
+          "currency": "JPY",
+          "accountNumber": "444455556666",
+          "userId": 100000001,
+          "payerType": "Type4"
+        },
+        {
+          "payerName": "Person B Payer 1",
+          "currency": "USD",
+          "accountNumber": "123456789",
+          "userId": 100000002,
+          "payerType": "Type1"
+        },
+        {
+          "payerName": "Person B Payer 2",
+          "currency": "EUR",
+          "accountNumber": "987654321",
+          "userId": 100000002,
+          "payerType": "Type2"
+        },
+        {
+          "payerName": "Person B Payer 3",
+          "currency": "GBP",
+          "accountNumber": "111122223333",
+          "userId": 100000002,
+          "payerType": "Type3"
+        },
+        {
+          "payerName": "Person B Payer 4",
+          "currency": "JPY",
+          "accountNumber": "444455556666",
+          "userId": 100000002,
+          "payerType": "Type4"
+        },
+        {
+          "payerName": "Person C Payer 1",
+          "currency": "USD",
+          "accountNumber": "123456789",
+          "userId": 100000003,
+          "payerType": "Type1"
+        },
+        {
+          "payerName": "Person C Payer 2",
+          "currency": "EUR",
+          "accountNumber": "987654321",
+          "userId": 100000003,
+          "payerType": "Type2"
+        },
+        {
+          "payerName": "Person C Payer 3",
+          "currency": "GBP",
+          "accountNumber": "111122223333",
+          "userId": 100000003,
+          "payerType": "Type3"
+        },
+        {
+          "payerName": "Person C Payer 4",
+          "currency": "JPY",
+          "accountNumber": "444455556666",
+          "userId": 100000003,
+          "payerType": "Type4"
+        }
+      ];
+      setState(() {
+        // Filter data based on userId
+        payees = data
+            .where((payee) => payee['userId'] == widget.userId)
+            .map((item) => Map<String, dynamic>.from(item))
+            .toList();
+      });
+      // } else {
+      //   throw Exception('Failed to load data');
+      // }
     } catch (error) {
       print('Error: $error');
     }

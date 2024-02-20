@@ -22,9 +22,176 @@ class _AccountsPage2State extends State<AccountsPage2> {
   var accountList = [];
   void fetchData() async {
     try {
-      final response =
-          await get(Uri.parse('http://10.101.151.42:3000/accounts'));
-      final jsonData = jsonDecode(response.body) as List;
+      // final response =
+      //     await get(Uri.parse('http://192.168.226.12:3000/accounts'));
+      // final jsonData = jsonDecode(response.body) as List;
+      final jsonData = [
+        {
+          "name": "John Doe",
+          "userId": 100000001,
+          "accountNumber": 1001,
+          "currency": "USD",
+          "balance": 5000,
+          "openingDate": "2023-05-10",
+          "branch": "Main Street",
+          "customerId": 5001,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Jane Smith",
+          "userId": 100000002,
+          "accountNumber": 1002,
+          "currency": "EUR",
+          "balance": 8000,
+          "openingDate": "2023-08-20",
+          "branch": "Downtown",
+          "customerId": 5002,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Alice Johnson",
+          "userId": 100000003,
+          "accountNumber": 1003,
+          "currency": "GBP",
+          "balance": 12000,
+          "openingDate": "2022-12-05",
+          "branch": "Uptown",
+          "customerId": 5003,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Bob Brown",
+          "userId": 100000001,
+          "accountNumber": 1004,
+          "currency": "JPY",
+          "balance": 3000,
+          "openingDate": "2024-01-15",
+          "branch": "Suburb",
+          "customerId": 5004,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Charlie Wilson",
+          "userId": 100000002,
+          "accountNumber": 1005,
+          "currency": "CAD",
+          "balance": 15000,
+          "openingDate": "2023-11-30",
+          "branch": "Midtown",
+          "customerId": 5005,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Diana Garcia",
+          "userId": 100000003,
+          "accountNumber": 1006,
+          "currency": "AUD",
+          "balance": 10000,
+          "openingDate": "2023-02-22",
+          "branch": "Downtown",
+          "customerId": 5006,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Eva Martinez",
+          "userId": 100000001,
+          "accountNumber": 1007,
+          "currency": "EUR",
+          "balance": 7500,
+          "openingDate": "2024-03-05",
+          "branch": "Uptown",
+          "customerId": 5007,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Frank Miller",
+          "userId": 100000002,
+          "accountNumber": 1008,
+          "currency": "USD",
+          "balance": 9000,
+          "openingDate": "2023-06-12",
+          "branch": "Main Street",
+          "customerId": 5008,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Grace Taylor",
+          "userId": 100000003,
+          "accountNumber": 1009,
+          "currency": "GBP",
+          "balance": 11000,
+          "openingDate": "2024-04-18",
+          "branch": "Downtown",
+          "customerId": 5009,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Henry Lewis",
+          "userId": 100000001,
+          "accountNumber": 1010,
+          "currency": "CAD",
+          "balance": 6000,
+          "openingDate": "2023-09-25",
+          "branch": "Midtown",
+          "customerId": 5010,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Ivy Turner",
+          "userId": 100000002,
+          "accountNumber": 1011,
+          "currency": "USD",
+          "balance": 9500,
+          "openingDate": "2023-10-08",
+          "branch": "Suburb",
+          "customerId": 5011,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Jack Harris",
+          "userId": 100000003,
+          "accountNumber": 1012,
+          "currency": "JPY",
+          "balance": 13000,
+          "openingDate": "2024-05-14",
+          "branch": "Uptown",
+          "customerId": 5012,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Kelly White",
+          "userId": 100000001,
+          "accountNumber": 1013,
+          "currency": "CAD",
+          "balance": 7200,
+          "openingDate": "2023-07-01",
+          "branch": "Downtown",
+          "customerId": 5013,
+          "accountType": "Savings"
+        },
+        {
+          "name": "Leo Rodriguez",
+          "userId": 100000002,
+          "accountNumber": 1014,
+          "currency": "GBP",
+          "balance": 10500,
+          "openingDate": "2024-02-28",
+          "branch": "Main Street",
+          "customerId": 5014,
+          "accountType": "Checking"
+        },
+        {
+          "name": "Mia Brown",
+          "userId": 100000003,
+          "accountNumber": 1015,
+          "currency": "USD",
+          "balance": 8800,
+          "openingDate": "2023-04-16",
+          "branch": "Midtown",
+          "customerId": 5015,
+          "accountType": "Savings"
+        }
+      ];
       setState(() {
         accountList = jsonData;
         // debugPrint(accountList[0]);
