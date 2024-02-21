@@ -7,6 +7,7 @@ import 'accounts.dart';
 import 'fund_transfer_screen.dart';
 import 'cross_currency_screen.dart';
 import 'managepayee.dart';
+import 'dart:async';
 // import 'approvalpage.dart';
 import 'my_approvals_screen.dart';
 import 'package:http/http.dart' as http;
@@ -23,8 +24,11 @@ class InstaBIZPage extends StatefulWidget {
 
 class _InstaBIZPageState extends State<InstaBIZPage> {
   int selectedPageIndex = 0;
-  // late int userId;
-  // List pageOptions = ;
+  bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 600;
+  bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 600;
+
   List pageOptions = [
     // DefaultPage(userId: widget.userId),
     const Center(
@@ -252,10 +256,45 @@ class _DefaultPageState extends State<DefaultPage> {
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     fetchData();
+    _startTimer();
   }
 
+  bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 600;
+  bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 600;
+
   List<Map<String, dynamic>> accounts = [];
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      if (_currentPageIndex < accounts.length - 1) {
+        _currentPageIndex++;
+        _pageController.animateToPage(
+          _currentPageIndex,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.ease,
+        );
+      } else {
+        // If reached the last page, go back to the first page
+        _currentPageIndex = 0;
+        _pageController.animateToPage(
+          0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.ease,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _timer.cancel(); // Cancel the timer to avoid memory leaks
+    super.dispose();
+  }
 
   Future<void> fetchData() async {
     try {
@@ -465,6 +504,11 @@ class _DefaultPageState extends State<DefaultPage> {
   //   // Add more data as needed
   // ];
 
+  // PageController _pageController = PageController();
+  late PageController _pageController;
+  late Timer _timer;
+  int _currentPageIndex = 0;
+
   List<CardWidget> generateCardWidgets(List<Map<String, dynamic>> dataList) {
     return dataList.map((data) {
       return CardWidget(
@@ -484,13 +528,57 @@ class _DefaultPageState extends State<DefaultPage> {
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: Column(
           children: [
-            Container(
-              height: 206,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.all(10.0),
-                children: generateCardWidgets(accounts),
+            if (isMobile(context))
+              Container(
+                height: 206,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.all(10.0),
+                  children: generateCardWidgets(accounts),
+                ),
               ),
+            if (isDesktop(context))
+              Container(
+                height: 206,
+                width: 320,
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                alignment: Alignment.center,
+                child: PageView(
+                  controller: _pageController,
+                  children: generateCardWidgets(accounts),
+                ),
+              ),
+            SizedBox(height: 5.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isDesktop(context))
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      _pageController.previousPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    },
+                  ),
+                if (isDesktop(context))
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      _pageController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    },
+                  ),
+              ],
             ),
             const SizedBox(
               height: 10.0,

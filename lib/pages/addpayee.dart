@@ -52,9 +52,11 @@ class _AddPayeeState extends State<AddPayee> {
               AddPayee.showAlert = false;
             });
           });
-
+          bool ismobile = MediaQuery.of(context).size.width < 600;
           return CartDialog(
-              dialogWidth: 0.9 * MediaQuery.of(context).size.width);
+              dialogWidth: ismobile
+                  ? 0.9 * MediaQuery.of(context).size.width
+                  : 0.5 * MediaQuery.of(context).size.width);
         },
       );
     });
@@ -94,54 +96,65 @@ class _AddPayeeState extends State<AddPayee> {
   }
 
   Widget buildPage() {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView(
-            children: [
-              Container(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Beneficiary Account',
-                                style:
-                                    TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
-                              SizedBox(height: 20),
-                              buildradiobuttons(),
-                            ]),
-                      ),
+    bool ismobile = MediaQuery.of(context).size.width < 600;
+    return Center(
+      child: Container(
+        width: ismobile
+            ? MediaQuery.of(context).size.width
+            : 0.6 * MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.fromLTRB(8, 16, 8, 0),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Beneficiary Account',
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                                  SizedBox(height: 20),
+                                  buildradiobuttons(),
+                                ]),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            SizedBox(
+              // width: double.infinity,
+              width: (MediaQuery.of(context).size.width >= 600)
+                  ? 400.0
+                  : double.infinity,
+              height: 40,
+              child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                  ),
+                  child: Text('ADD BENEFICIARY',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white))),
+            ),
+          ],
         ),
-        SizedBox(
-          width: double.infinity,
-          height: 40,
-          child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-              ),
-              child: Text('ADD BENEFICIARY',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white))),
-        ),
-      ],
+      ),
     );
   }
 
@@ -494,8 +507,7 @@ class _CartDialogState extends State<CartDialog> {
         borderRadius: BorderRadius.circular(0.0),
       ),
       child: Container(
-        //  width: widget.dialogWidth,
-        width: 0.9 * MediaQuery.of(context).size.width,
+        width: widget.dialogWidth,
         height: 0.5 * MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),

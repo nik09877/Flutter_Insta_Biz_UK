@@ -4,9 +4,9 @@ import 'package:flutter/gestures.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:local_auth/local_auth.dart';
-import 'package:myproject/pages/instabiz.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:local_auth/local_auth.dart';
+import 'instabiz.dart';
+//import 'package:url_launcher/url_launcher.dart';
 import 'loginpage.dart';
 
 class AppSetupPage1 extends StatefulWidget {
@@ -23,14 +23,14 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
   bool isChecked = false;
   bool _isButtonEnabled = false;
 
-  void _launchURL(String url) async {
-    const url = 'https://www.icicibank.co.uk/html/uk/promo/hvcapromo/index';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  // void _launchURL(String url) async {
+  //   const url = 'https://www.icicibank.co.uk/html/uk/promo/hvcapromo/index';
+  //   if (await canLaunch(url)) {
+  //     await launch(url);
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
 
   List<Map<String, dynamic>> users = [];
 
@@ -115,6 +115,7 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
                 height: MediaQuery.of(context).size.height - 100,
                 child: Center(
                   child: Container(
+                    //  width: (sw<600) ? 0.6*sw : sw,
                     padding: const EdgeInsets.only(
                       left: 30,
                       right: 30,
@@ -131,8 +132,9 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
                       children: [
                         Image.asset(
                           'assets/instaBIZ.png',
-                          width: 0.5 * sw,
-                          height: (sh < 710) ? (0.25 * sw) : (0.45 * sw),
+                          width: (sw >= 600) ? 0.3 * sw : 0.5 * sw,
+                          // height: (sh < 710) ? (0.25 * sw) : (0.45 * sw),
+                          height: 200.0,
                         ),
                         Flexible(
                           child: Container(),
@@ -174,59 +176,65 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
                               },
                               child: Column(
                                 children: [
-                                  TextFormField(
-                                    controller: _IDController,
-                                    maxLength: 9,
-                                    // keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      counterText: '',
-                                      hintText:
-                                          'Internet Banking Corporate ID, Username',
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey[350]!)),
+                                  SizedBox(
+                                    width: (sw < 600) ? sw : 0.6 * sw,
+                                    child: TextFormField(
+                                      controller: _IDController,
+                                      maxLength: 9,
+                                      // keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        counterText: '',
+                                        hintText:
+                                            'Internet Banking Corporate ID, Username',
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.grey[350]!)),
+                                      ),
+                                      // inputFormatters: [
+                                      // FilteringTextInputFormatter.digitsOnly
+                                      // ],
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter a value';
+                                        }
+                                        // if (value.length != 9) {
+                                        // return 'Length should be 9 digits';
+                                        // }
+                                        // if (int.tryParse(value) == null) {
+                                        // return 'Please enter only integers';
+                                        // }
+                                        return null;
+                                      },
                                     ),
-                                    // inputFormatters: [
-                                    // FilteringTextInputFormatter.digitsOnly
-                                    // ],
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter a value';
-                                      }
-                                      // if (value.length != 9) {
-                                      // return 'Length should be 9 digits';
-                                      // }
-                                      // if (int.tryParse(value) == null) {
-                                      // return 'Please enter only integers';
-                                      // }
-                                      return null;
-                                    },
                                   ),
                                   const SizedBox(height: 5),
-                                  TextFormField(
-                                    controller: _passwordController,
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                      hintText: 'Internet Banking Password',
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey[350]!)),
+                                  SizedBox(
+                                    width: (sw < 600) ? sw : 0.6 * sw,
+                                    child: TextFormField(
+                                      controller: _passwordController,
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                        hintText: 'Internet Banking Password',
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.grey[350]!)),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter a value';
+                                        }
+                                        // if (value.length < 8 ||
+                                        // value.length > 20) {
+                                        // return 'Password length should be between 8 and 20 characters';
+                                        // }
+                                        // if (!RegExp(
+                                        // r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_+{}|:"<>?/~`-]).{8,}$')
+                                        // .hasMatch(value)) {
+                                        // return 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character';
+                                        // }
+                                        return null;
+                                      },
                                     ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter a value';
-                                      }
-                                      // if (value.length < 8 ||
-                                      // value.length > 20) {
-                                      // return 'Password length should be between 8 and 20 characters';
-                                      // }
-                                      // if (!RegExp(
-                                      // r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_+{}|:"<>?/~`-]).{8,}$')
-                                      // .hasMatch(value)) {
-                                      // return 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character';
-                                      // }
-                                      return null;
-                                    },
                                   ),
                                 ],
                               ),
@@ -319,8 +327,8 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
                                             ),
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () {
-                                                _launchURL(
-                                                    'https://www.icicibank.co.uk/html/uk/promo/hvcapromo/index');
+                                                // _launchURL(
+                                                //     'https://www.icicibank.co.uk/html/uk/promo/hvcapromo/index');
                                               },
                                           ),
                                         ],
@@ -359,12 +367,18 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
                           );
                           if (user != null) {
                             if (user['password'] == enteredPassword) {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return BottomSheetContent(user: user);
-                                },
-                              );
+                              MediaQuery.of(context).size.width < 600
+                                  ? showModalBottomSheet(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return BottomSheetContent(user: user);
+                                      },
+                                    )
+                                  : showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return otpdialog(user: user);
+                                      });
                             } else {
                               showDialog(
                                 context: context,
@@ -403,15 +417,44 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
                               },
                             );
                           }
-
-                          // showModalBottomSheet(
-                          //   context: context,
-                          //   builder: (BuildContext context) {
-                          //     return BottomSheetContent();
-                          //   },
-                          // );
                         }
                       : null,
+                  /* _isButtonEnabled ?   showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text("check the box to proceed"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ):  showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text("Enter the details to proceed"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ); */
+
+                  //:
+                  // ,
                   style: ElevatedButton.styleFrom(
                     primary: const Color.fromARGB(255, 2, 35, 61),
                     disabledBackgroundColor:
@@ -441,7 +484,7 @@ class _AppSetupPage1State extends State<AppSetupPage1> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(width: sw * 0.15),
+        SizedBox(width: (sw < 600) ? sw * 0.15 : sw * 0.3),
         Container(
           width: 4.0,
           height: 4.0,
@@ -599,7 +642,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                     ),
                   ),
                   SizedBox(
-                    width: double.infinity,
+                    width: 0.25 * MediaQuery.of(context).size.width,
                     height: 40,
                     child: ElevatedButton(
                       onPressed: isOTPEntered
@@ -613,12 +656,12 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                                   ),
                                 );
                               } else {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginPage(user: user),
-                                  ),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => LoginPage(user: user),
+                                //   ),
+                                // );
                               }
                             }
                           : null,
@@ -708,50 +751,50 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
 
   // bool _isAuthenticating = false;
   // String _authorized = 'Not Authorized';
-  final LocalAuthentication auth = LocalAuthentication();
+  // final LocalAuthentication auth = LocalAuthentication();
 
-  Future<void> _authenticateWithBiometrics(BuildContext context) async {
-    bool authenticated = false;
-    try {
-      // setState(() {
-      //   _isAuthenticating = true;
-      //   _authorized = 'Authenticating';
-      // });
-      authenticated = await auth.authenticate(
-        localizedReason: 'Scan your fingerprint to authenticate',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: true,
-        ),
-      );
-      // setState(() {
-      //   _isAuthenticating = false;
-      //   _authorized = 'Authenticating';
-      // });
-    } on PlatformException catch (e) {
-      print(e);
-      // setState(() {
-      //   _isAuthenticating = false;
-      //   _authorized = 'Error - ${e.message}';
-      // });
-      return;
-    }
-    if (!mounted) {
-      return;
-    }
-    if (authenticated) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginPage(user: user),
-        ),
-      );
-    }
-    // final String message = authenticated ? 'Authorized' : 'Not Authorized';
-    // setState(() {
-    //   _authorized = message;
-    // });
-  }
+  // Future<void> _authenticateWithBiometrics(BuildContext context) async {
+  //   bool authenticated = false;
+  //   try {
+  //     // setState(() {
+  //     //   _isAuthenticating = true;
+  //     //   _authorized = 'Authenticating';
+  //     // });
+  //     authenticated = await auth.authenticate(
+  //       localizedReason: 'Scan your fingerprint to authenticate',
+  //       options: const AuthenticationOptions(
+  //         stickyAuth: true,
+  //         biometricOnly: true,
+  //       ),
+  //     );
+  //     // setState(() {
+  //     //   _isAuthenticating = false;
+  //     //   _authorized = 'Authenticating';
+  //     // });
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //     // setState(() {
+  //     //   _isAuthenticating = false;
+  //     //   _authorized = 'Error - ${e.message}';
+  //     // });
+  //     return;
+  //   }
+  //   if (!mounted) {
+  //     return;
+  //   }
+  //   if (authenticated) {
+  //     // Navigator.push(
+  //     //   context,
+  //     //   MaterialPageRoute(
+  //     //     builder: (context) => LoginPage(user: user),
+  //     //   ),
+  //     // );
+  //   }
+  //   // final String message = authenticated ? 'Authorized' : 'Not Authorized';
+  //   // setState(() {
+  //   //   _authorized = message;
+  //   // });
+  // }
 
   // Future<void> _cancelAuthentication() async {
   //   await auth.stopAuthentication();
@@ -783,19 +826,25 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
     double sw = MediaQuery.of(context).size.width; //screen width
     return Scaffold(
       body: Container(
+        margin: sw >= 600
+            ? EdgeInsets.symmetric(
+                horizontal: 0.2 * MediaQuery.of(context).size.width)
+            : null,
         color: Colors.white,
         child: Stack(
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Stack(
                   children: [
                     Column(
                       children: [
                         Container(
-                          height: 0.3 * MediaQuery.of(context).size.width,
+                          height: sw >= 600
+                              ? 0.2 * MediaQuery.of(context).size.height
+                              : 0.3 * MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             color: Colors.red[700],
                             borderRadius: BorderRadius.vertical(
@@ -810,7 +859,10 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      top: 0.3 * sw * 0.6,
+                      top: sw < 600
+                          ? 0.3 * sw * 0.6
+                          : 0.25 * MediaQuery.of(context).size.height * 0.6,
+                      // top: 0.3 * sw * 0.6,
                       child: Container(
                         color: Colors.transparent,
                         child: const Column(
@@ -834,59 +886,68 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                     ),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('New MPIN',
-                        style: TextStyle(fontSize: 14, color: Colors.grey)),
-                    TextField(
-                      controller: _mpincontroller,
-                      maxLength: 6,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        counterText: '',
-                        hintText: 'Enter six-digit MPIN',
-                        hintStyle:
-                            const TextStyle(color: Colors.grey, fontSize: 16),
-                        enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('New MPIN',
+                          style: TextStyle(fontSize: 14, color: Colors.grey)),
+                      TextField(
+                        controller: _mpincontroller,
+                        maxLength: 6,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          counterText: '',
+                          hintText: 'Enter six-digit MPIN',
+                          hintStyle:
+                              const TextStyle(color: Colors.grey, fontSize: 16),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red[700]!),
+                          ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red[700]!),
-                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        onChanged: (value) {},
                       ),
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      onChanged: (value) {},
-                    ),
-                    const SizedBox(height: 16),
-                    const Text('Confirm New MPIN',
-                        style: TextStyle(fontSize: 14, color: Colors.grey)),
-                    TextField(
-                      controller: _confirmmpincontroller,
-                      obscureText: true,
-                      maxLength: 6,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        counterText: '',
-                        hintText: 'Confirm MPIN',
-                        hintStyle:
-                            const TextStyle(color: Colors.grey, fontSize: 16),
-                        enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+                      const SizedBox(height: 16),
+                      const Text('Confirm New MPIN',
+                          style: TextStyle(fontSize: 14, color: Colors.grey)),
+                      TextField(
+                        controller: _confirmmpincontroller,
+                        obscureText: true,
+                        maxLength: 6,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          counterText: '',
+                          hintText: 'Confirm MPIN',
+                          hintStyle:
+                              const TextStyle(color: Colors.grey, fontSize: 16),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red[700]!),
+                          ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red[700]!),
-                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        onChanged: (value) {},
                       ),
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      onChanged: (value) {},
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Expanded(child: Container()),
                 SizedBox(
-                  width: double.infinity,
+                  width: sw >= 600
+                      ? 400.0
+                      : 0.9 * MediaQuery.of(context).size.width,
                   height: 40,
                   child: ElevatedButton(
                     onPressed:
@@ -896,7 +957,13 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                                 // http.put(
                                 //     Uri.parse('http://192.168.226.12:3000/users/'),
                                 //     body: {});
-                                callbottomsheet();
+                                // callbottomsheet();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => InstaBIZPage(
+                                          userId: widget.user['userId']),
+                                    ));
                               }
                             : null,
                     style: ElevatedButton.styleFrom(
@@ -988,12 +1055,12 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    InstaBIZPage(userId: widget.user['userId']),
-                              ));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) =>
+                          //           InstaBIZPage(userId: widget.user['userId']),
+                          //     ));
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Color.fromARGB(255, 2, 35, 61),
@@ -1016,5 +1083,186 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
             ),
           );
         });
+  }
+}
+
+class otpdialog extends StatefulWidget {
+  late Map<String, dynamic> user;
+  otpdialog({required this.user});
+  @override
+  State<otpdialog> createState() => _otpdialogState();
+}
+
+class _otpdialogState extends State<otpdialog> {
+  final _otpcontroller = TextEditingController();
+  final mobileNumber = 9876543210;
+  bool isOTPEntered = false;
+  late Map<String, dynamic> user;
+
+  @override
+  void dispose() {
+    _otpcontroller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user;
+  }
+
+  String formatNumber(String number) {
+    List<String> digits = number.split('');
+    digits[2] = '*';
+    digits[3] = '*';
+    digits[6] = '*';
+    digits[7] = '*';
+    return digits.join();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
+      child: Container(
+        width: 0.5 * MediaQuery.of(context).size.width,
+        height: 0.35 * MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            Container(
+              height: 50,
+              color: Colors.white,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'Verify OTP',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.red[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                ],
+              ),
+            ),
+            Container(
+              height: 2,
+              color: Colors.red[900],
+            ),
+            Expanded(
+              child: Container(
+                color: Colors.grey[100],
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'Please enter the OTP sent to the registered mobile number ${formatNumber(mobileNumber.toString())}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      width: 0.4 * MediaQuery.of(context).size.width,
+                      height: 40,
+                      child: SizedBox(
+                        width: 0.15 * MediaQuery.of(context).size.width,
+                        child: TextField(
+                          controller: _otpcontroller,
+                          maxLength: 6,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            counterText: '',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Colors.grey[700]!,
+                              ),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              isOTPEntered = value.length == 6;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CountdownTimer(),
+                    const SizedBox(
+                      height: 60,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: isOTPEntered
+                    ? () {
+                        if (user['mpin'] == null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AppSetupPage2(user: user),
+                            ),
+                          );
+                        } else {
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => LoginPage(user: user),
+                          //   ),
+                          // );
+                        }
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  primary: isOTPEntered ? Colors.blue : Colors.grey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                ),
+                child: const Text(
+                  'PROCEED',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

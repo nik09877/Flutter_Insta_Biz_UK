@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'instabiz.dart';
@@ -29,10 +30,12 @@ class _PayeeSelectionState extends State<PayeeSelection> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWideScreen = screenWidth > 600;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 179, 14, 14),
-        // title: Center(child: Text('Manage Payee')),
         title: Row(
           children: [
             IconButton(
@@ -64,150 +67,168 @@ class _PayeeSelectionState extends State<PayeeSelection> {
           color: Colors.white,
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 20),
-          Container(
-            margin: EdgeInsets.only(left: 40.0),
-            child: Text(
-              'Beneficiary Account',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
+      body: Container(
+        margin: isWideScreen
+            ? EdgeInsets.only(
+                left: 0.25 * MediaQuery.of(context).size.width,
+                right: 0.25 * MediaQuery.of(context).size.width)
+            : null, // Adjust the margin value as needed
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 20),
+            Container(
+              margin: EdgeInsets.only(left: 20),
+              child: Text(
+                'Beneficiary Account',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 10),
-          RadioListTile(
-            title: Text('Benefeciary ICICI Bank '),
-            value: 1,
-            groupValue: selectedPayee,
-            onChanged: (value) {
-              setState(() {
-                selectedPayee = value as int?;
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text('Benefeciary CHAPS '),
-            value: 2,
-            groupValue: selectedPayee,
-            onChanged: (value) {
-              setState(() {
-                selectedPayee = value as int?;
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text('Same day Payee '),
-            value: 3,
-            groupValue: selectedPayee,
-            onChanged: (value) {
-              setState(() {
-                selectedPayee = value as int?;
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text(
-                'AN Account with Any other Bank (For Swift/ Wire Transfers to India and Other Countries)'),
-            value: 4,
-            groupValue: selectedPayee,
-            onChanged: (value) {
-              setState(() {
-                selectedPayee = value as int?;
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text(
-                'AN Account with Any other Bank In India (Payment in INR)'),
-            value: 5,
-            groupValue: selectedPayee,
-            onChanged: (value) {
-              setState(() {
-                selectedPayee = value as int?;
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text('AN Account with ICIC Bank In India (Payment In INR)'),
-            value: 6,
-            groupValue: selectedPayee,
-            onChanged: (value) {
-              setState(() {
-                selectedPayee = value as int?;
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text('Any Other Account with ICICI Bank Account UK PLC'),
-            value: 7,
-            groupValue: selectedPayee,
-            onChanged: (value) {
-              setState(() {
-                selectedPayee = value as int?;
-              });
-            },
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: Container(),
-          ),
-        ],
+            SizedBox(height: 10),
+            RadioListTile(
+              title: Text('Beneficiary ICICI Bank '),
+              value: 1,
+              groupValue: selectedPayee,
+              onChanged: (value) {
+                setState(() {
+                  selectedPayee = value as int?;
+                });
+              },
+            ),
+            RadioListTile(
+              title: Text('Beneficiary CHAPS '),
+              value: 2,
+              groupValue: selectedPayee,
+              onChanged: (value) {
+                setState(() {
+                  selectedPayee = value as int?;
+                });
+              },
+            ),
+            RadioListTile(
+              title: Text('Same day Payee '),
+              value: 3,
+              groupValue: selectedPayee,
+              onChanged: (value) {
+                setState(() {
+                  selectedPayee = value as int?;
+                });
+              },
+            ),
+            RadioListTile(
+              title: Text(
+                  'AN Account with Any other Bank (For Swift/ Wire Transfers to India and Other Countries)'),
+              value: 4,
+              groupValue: selectedPayee,
+              onChanged: (value) {
+                setState(() {
+                  selectedPayee = value as int?;
+                });
+              },
+            ),
+            RadioListTile(
+              title: Text(
+                  'AN Account with Any other Bank In India (Payment in INR)'),
+              value: 5,
+              groupValue: selectedPayee,
+              onChanged: (value) {
+                setState(() {
+                  selectedPayee = value as int?;
+                });
+              },
+            ),
+            RadioListTile(
+              title:
+                  Text('AN Account with ICIC Bank In India (Payment In INR)'),
+              value: 6,
+              groupValue: selectedPayee,
+              onChanged: (value) {
+                setState(() {
+                  selectedPayee = value as int?;
+                });
+              },
+            ),
+            RadioListTile(
+              title: Text('Any Other Account with ICICI Bank Account UK PLC'),
+              value: 7,
+              groupValue: selectedPayee,
+              onChanged: (value) {
+                setState(() {
+                  selectedPayee = value as int?;
+                });
+              },
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: Container(),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => PayeeListScreen(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth > 600) {
+                return Center(
+                  child: SizedBox(
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PayeeListScreen(
+                              userId: widget.userId,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.indigo,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Add Payee',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                // Mobile layout
+                return ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PayeeListScreen(
                           userId: widget.userId,
-                        )),
-              );
-
-              // if (selectedPayee == 3) {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => PayeeListScreen1()),
-              //   );
-              // }
-
-              // if (selectedPayee == 4) {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => PayeeListScreen2()),
-              //   );
-              // }
-              // if (selectedPayee == 5) {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => PayeeListScreen3()),
-              //   );
-              // }
-              // if (selectedPayee == 6 || selectedPayee == 7) {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => PayeeListScreen4()),
-              //   );
-              // }
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                  ),
+                  child: Text(
+                    'Add Payee',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                );
+              }
             },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.indigo,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            // child: Text('Add Payee'),
-            child: Text(
-              'Add Payee',
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-            ),
           ),
         ),
       ),
@@ -342,146 +363,170 @@ class _PayeeListScreenState extends State<PayeeListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWideScreen = screenWidth > 600;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Manage Payee'),
-      //   backgroundColor: Color.fromARGB(255, 255, 17, 0),
-      // ),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 204, 23, 23),
-        // title: Center(child: Text('Manage Payee')),
         title: Row(
           children: [
             IconButton(
-                icon: Icon(Icons.menu, color: Colors.white), onPressed: () {}),
-            const Expanded(
+              icon: Icon(Icons.menu, color: Colors.white),
+              onPressed: () {},
+            ),
+            Expanded(
               child: Text(
                 'Manage Payee',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
-            const SizedBox(width: 55),
+            SizedBox(width: 55),
           ],
         ),
         leading: IconButton(
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //       builder: (context) => InstaBIZPage(
-            //             userId: widget.userId,
-            //           )),
-            // );
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back),
           color: Colors.white,
         ),
       ),
-      body: payees.isEmpty
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: payees.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    child: Text(
-                      payees[index]['payerName']![0].toUpperCase() +
-                          payees[index]['payerName']![1].toUpperCase(),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    backgroundColor: Color.fromARGB(255, 204, 23, 23),
-                  ),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              payees[index]['payerName']!,
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(height: 3),
-                            Text(
-                              'Account No: ',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            Text('${payees[index]['accountNumber']}'),
-                          ],
+      body: Container(
+        margin: isWideScreen
+            ? EdgeInsets.only(
+                left: 0.25 * screenWidth,
+                right: 0.25 * MediaQuery.of(context).size.width)
+            : null,
+        child: payees.isEmpty
+            ? Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                itemCount: payees.length,
+                itemBuilder: (context, index) {
+                  return Dismissible(
+                    key: Key(payees[index]['accountNumber'].toString()),
+                    onDismissed: (direction) {
+                      setState(() {
+                        // Remove the item from the list when swiped
+                        payees.removeAt(index);
+                      });
+                    },
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: Text(
+                          payees[index]['payerName']![0].toUpperCase() +
+                              payees[index]['payerName']![1].toUpperCase(),
+                          style: TextStyle(color: Colors.white),
                         ),
+                        backgroundColor: Color.fromARGB(255, 204, 23, 23),
                       ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              payees[index]['currency']!,
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 204, 23, 23),
-                                  fontWeight: FontWeight.w500),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  payees[index]['payerName']!,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                SizedBox(height: 3),
+                                Text(
+                                  'Account No: ',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Text('${payees[index]['accountNumber']}'),
+                              ],
                             ),
-                            Text('payertype :',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                )),
-                            Text(' ${payees[index]['payertype']}'),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.cancel,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  payees[index]['currency']!,
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 204, 23, 23),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  'payertype :',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(' ${payees[index]['payertype']}'),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                payees.removeAt(index);
+                              });
+                            },
+                            icon: Icon(Icons.cancel),
                             color: Color.fromARGB(255, 204, 23, 23),
                           ),
-                        ),
+                        ],
                       ),
-                      Divider(
-                        height: 1,
-                        color: Color.fromARGB(255, 204, 23, 23),
-                        thickness: 2,
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                    ),
+                  );
+                },
+              ),
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          // child: ElevatedButton(
-          //   onPressed: () {},
-          //   style: ElevatedButton.styleFrom(
-          //     primary: Colors.indigo,
-          //   ),
-          //   child: Text('Add Payee'),
-          // ),
-          child: ElevatedButton(
-            onPressed: () {
-              // _formKey.currentState!.validate();
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth > 600) {
+                return Center(
+                  child: SizedBox(
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Add Payee functionality...
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.indigo,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Add Payee',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return ElevatedButton(
+                  onPressed: () {
+                    // Add Payee functionality...
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                  ),
+                  child: Text(
+                    'Add Payee',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                );
+              }
             },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.indigo,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            child: Text(
-              'Add Payee',
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-            ),
           ),
         ),
       ),

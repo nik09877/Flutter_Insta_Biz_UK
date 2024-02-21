@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myproject/models/account_model.dart';
@@ -331,14 +331,430 @@ class _CrossCurrencyScreenState extends State<CrossCurrencyScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isWeb = kIsWeb;
 
     return Scaffold(
-      appBar: _appBar(context),
+      appBar: _appBar(context, isWeb),
       body: payers != null && userAccounts != null
-          ? SafeArea(
-              child: ListView(
-                children: [
-                  Form(
+          ? !isWeb
+              ? SafeArea(
+                  child: ListView(
+                    children: [
+                      Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(top: 16.0, left: 16.0),
+                                child: Text("From Account",
+                                    style: TextStyle(
+                                        color: Palette.grey, fontSize: 16)),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 10.0, top: 10.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Current Account',
+                                      style: TextStyle(
+                                          color: Palette.grey, fontSize: 14),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 50.0),
+                                      child: Text(
+                                        'Available Balance',
+                                        style: TextStyle(
+                                            color: Palette.grey, fontSize: 14),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: 200,
+                                      height: 50,
+                                      child: DropdownButtonFormField(
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Please select an option';
+                                          }
+                                          // Add additional validation as needed
+                                          return null; // Return null if the input is valid
+                                        },
+                                        value: _selectedAccBal,
+                                        hint: const Text('Account Number',
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 207, 202, 202),
+                                                fontSize: 14)),
+                                        onChanged: (String? newValue) {
+                                          setState(() {
+                                            _selectedAccBal = newValue;
+                                            isVisible1 = false;
+                                            int accNo = int.parse(
+                                                newValue!.split(' ')[0]);
+                                            currentAccount = userAccounts
+                                                ?.firstWhere((acc) =>
+                                                    acc.accountNumber == accNo);
+                                            // isTypeVisible = true;
+                                          });
+                                          _formKey.currentState!.validate();
+                                        },
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                        ),
+                                        items: userAccounts?.map((acc) {
+                                          String value =
+                                              "${acc.accountNumber} (${acc.currency}) - ${acc.branch}";
+                                          return DropdownMenuItem(
+                                            value: value,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                SizedBox(
+                                                    width: 120,
+                                                    child: Text(
+                                                      value,
+                                                      style: const TextStyle(
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          color: Color.fromARGB(
+                                                              178, 0, 0, 0)),
+                                                    )),
+                                                Visibility(
+                                                    visible: isVisible1,
+                                                    child: Radio(
+                                                        value: value,
+                                                        groupValue:
+                                                            _selectedAccBal,
+                                                        onChanged: (value) {}))
+                                              ],
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                    // const SizedBox(width: 10),
+                                    // Text("￡"),
+                                    Container(
+                                      width: 130,
+                                      height: 50,
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 10),
+                                      child: Text(
+                                          "￡ ${currentAccount != null ? currentAccount!.balance : ''}",
+                                          style: const TextStyle(
+                                              color:
+                                                  Color.fromARGB(178, 0, 0, 0),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 14.0, left: 10.0),
+                                child: SizedBox(
+                                  width: 90,
+                                  child: Stack(
+                                    children: [
+                                      Text(
+                                        'Transfer To',
+                                        style: TextStyle(
+                                          color: Palette.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top:
+                                            -4, // Adjust to position asterisk above text
+                                        right: 12,
+                                        child: Text(
+                                          '*',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: DropdownButtonFormField<String>(
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return 'Please select an option';
+                                    }
+                                    // Add additional validation as needed
+                                    return null; // Return null if the input is valid
+                                  },
+                                  key: const Key('key'),
+                                  value: _selectedPayee,
+                                  decoration: const InputDecoration(
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Palette.red))),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedPayee = value!;
+                                      // isPayeeSelected = !isPayeeSelected;
+                                    });
+                                    _formKey.currentState!.validate();
+                                  },
+                                  hint: const Text('Select Payee',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 207, 202, 202),
+                                          fontSize: 14)),
+                                  items: payers!.map((payer) {
+                                    return DropdownMenuItem<String>(
+                                      value: payer.accountNumber.toString(),
+                                      child: dropDownOption(
+                                          int.parse(payer.accountNumber),
+                                          payer.payerName,
+                                          payer.currency),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 10),
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AddPayee()));
+                                  },
+                                  child: const Text(
+                                    "Add Payee",
+                                    style: TextStyle(
+                                        color: Palette
+                                            .red, // Set the text color to red
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: Palette.red,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              if (_selectedAccBal != null &&
+                                  _selectedPayee != null)
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 16.0, left: 16.0),
+                                  child: Text("Amount",
+                                      style: TextStyle(
+                                          color: Palette.grey, fontSize: 16)),
+                                ),
+                              if (_selectedAccBal != null &&
+                                  _selectedPayee != null)
+                                Container(
+                                  padding:
+                                      const EdgeInsets.only(left: 20, top: 16),
+                                  width: screenWidth * 0.7,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Radio(
+                                                value: "Buy",
+                                                groupValue: selectedAmountType,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedAmountType = value;
+                                                  });
+                                                },
+                                                activeColor: Palette
+                                                    .red, // Set the color for the selected radio button
+                                              ),
+                                              const Text('Buy',
+                                                  style: TextStyle(
+                                                      color: Palette.grey,
+                                                      fontSize: 16,
+                                                      letterSpacing: 0.8)),
+                                            ]),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Radio(
+                                              value: "Sell",
+                                              groupValue: selectedAmountType,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  selectedAmountType = value;
+                                                });
+                                              },
+                                            ),
+                                            const Text('Sell',
+                                                style: TextStyle(
+                                                    color: Palette.grey,
+                                                    fontSize: 16)),
+                                          ],
+                                        ),
+                                      ]),
+                                ),
+                              // const SizedBox(height: 20),
+                              if (_selectedAccBal != null &&
+                                  _selectedPayee != null)
+                                Container(
+                                  padding:
+                                      const EdgeInsets.only(left: 28, top: 16),
+                                  child: Row(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 2.0),
+                                      child: const Text('EUR',
+                                          style: TextStyle(
+                                              color: Palette.grey,
+                                              fontSize: 14)),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      child: TextFormField(
+                                        controller: _amountController,
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return 'Amount cannot be empty';
+                                          }
+
+                                          if (!amountRegex.hasMatch(value)) {
+                                            return 'Enter a valid amount';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (value) =>
+                                            {_formKey.currentState!.validate()},
+                                        keyboardType: TextInputType.number,
+                                        // inputFormatters: [
+                                        //   FilteringTextInputFormatter.digitsOnly
+                                        // ],
+                                        cursorColor: Palette.lightGrey,
+                                        decoration: const InputDecoration(
+                                            border: InputBorder
+                                                .none, // Remove the border
+                                            focusedBorder: InputBorder
+                                                .none, // Remove the focused border
+                                            hintText: 'Enter Amount',
+                                            hintStyle: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 164, 179, 197))),
+                                      ),
+                                    )
+                                  ]),
+                                ),
+                              if (_selectedAccBal != null &&
+                                  _selectedPayee != null)
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Divider(
+                                    color: Palette.lightGrey,
+                                    height: 2,
+                                    thickness: 1,
+                                  ),
+                                ),
+                              const SizedBox(height: 10),
+                              if (_selectedAccBal != null &&
+                                  _selectedPayee != null)
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Text("Remarks",
+                                      style: TextStyle(
+                                          color: Palette.grey, fontSize: 12)),
+                                ),
+                              if (_selectedAccBal != null &&
+                                  _selectedPayee != null)
+                                Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0),
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedRemark,
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return 'Please select an option';
+                                        }
+                                        // Add additional validation as needed
+                                        return null; // Return null if the input is valid
+                                      },
+                                      decoration: InputDecoration(
+                                        labelText: _selectedRemark != null
+                                            ? ''
+                                            : 'Remark',
+                                        labelStyle:
+                                            TextStyle(color: Colors.grey[400]),
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                      ), // Set label color to light grey
+                                      // border:none,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _selectedRemark = newValue;
+                                        });
+                                        _formKey.currentState!.validate();
+                                      },
+                                      items: remarks
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value,
+                                              style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      178, 0, 0, 0))),
+                                        );
+                                      }).toList(),
+                                    )),
+                              if (_selectedAccBal != null &&
+                                  _selectedPayee != null)
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Divider(
+                                    color: Palette.lightGrey,
+                                    height: 2,
+                                    thickness: 1,
+                                  ),
+                                ),
+                            ],
+                          )),
+                    ],
+                  ),
+                )
+              : Container(
+                  margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.25),
+                  child: Form(
                       key: _formKey,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -376,10 +792,9 @@ class _CrossCurrencyScreenState extends State<CrossCurrencyScreen> {
                             padding: const EdgeInsets.only(left: 12.0),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  width: 200,
+                                  width: screenWidth * 0.25,
                                   height: 50,
                                   child: DropdownButtonFormField(
                                     validator: (value) {
@@ -422,7 +837,7 @@ class _CrossCurrencyScreenState extends State<CrossCurrencyScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             SizedBox(
-                                                width: 120,
+                                                width: screenWidth * 0.2,
                                                 child: Text(
                                                   value,
                                                   style: const TextStyle(
@@ -443,13 +858,12 @@ class _CrossCurrencyScreenState extends State<CrossCurrencyScreen> {
                                     }).toList(),
                                   ),
                                 ),
-                                // const SizedBox(width: 10),
+                                SizedBox(width: screenWidth * 0.13),
                                 // Text("￡"),
                                 Container(
-                                  width: 170,
+                                  width: 130,
                                   height: 50,
-                                  padding:
-                                      const EdgeInsets.only(top: 10, left: 10),
+                                  padding: const EdgeInsets.only(top: 10),
                                   child: Text(
                                       "￡ ${currentAccount != null ? currentAccount!.balance : ''}",
                                       style: const TextStyle(
@@ -565,7 +979,7 @@ class _CrossCurrencyScreenState extends State<CrossCurrencyScreen> {
                           if (_selectedAccBal != null && _selectedPayee != null)
                             Container(
                               padding: const EdgeInsets.only(left: 20, top: 16),
-                              width: screenWidth * 0.7,
+                              width: screenWidth * 0.3,
                               child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -613,7 +1027,7 @@ class _CrossCurrencyScreenState extends State<CrossCurrencyScreen> {
                           // const SizedBox(height: 20),
                           if (_selectedAccBal != null && _selectedPayee != null)
                             Container(
-                              padding: const EdgeInsets.only(left: 28, top: 16),
+                              padding: const EdgeInsets.only(left: 18, top: 16),
                               child: Row(children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 2.0),
@@ -722,40 +1136,96 @@ class _CrossCurrencyScreenState extends State<CrossCurrencyScreen> {
                                 thickness: 1,
                               ),
                             ),
+                          const Spacer(),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 5),
+                            width: double.maxFinite,
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(),
+                                        child: BottomSheetContent(),
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Palette.lightBlue,
+                                  shape: const BeveledRectangleBorder()),
+                              child: const Text(
+                                'PROCEED',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       )),
-                ],
-              ),
-            )
+                )
           : const Center(child: CircularProgressIndicator()),
-      bottomNavigationBar: _bottomButton(screenWidth, context),
+      bottomNavigationBar: !isWeb ? _bottomButton(screenWidth, context) : null,
     );
   }
 
-  AppBar _appBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Palette.red,
-      leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back, size: 16, color: Palette.white)),
-      title: Row(
-        children: [
-          Container(
-              margin: EdgeInsets.only(right: 20),
-              child: const Icon(Icons.menu, size: 16, color: Palette.white)),
-          const Text(
-            "Cross Currency Transfer",
-            style: TextStyle(
-                color: Palette.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-      // centerTitle: true,
-    );
+  AppBar _appBar(BuildContext context, isWeb) {
+    return !isWeb
+        ? AppBar(
+            backgroundColor: Palette.red,
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back,
+                    size: 16, color: Palette.white)),
+            title: Row(
+              children: [
+                Container(
+                    margin: EdgeInsets.only(right: 20),
+                    child:
+                        const Icon(Icons.menu, size: 16, color: Palette.white)),
+                const Text(
+                  "Cross Currency Transfer",
+                  style: TextStyle(
+                      color: Palette.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            // centerTitle: true,
+          )
+        : AppBar(
+            backgroundColor: Palette.red,
+            leading: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back,
+                        size: 16, color: Palette.white)),
+                const Icon(Icons.menu, size: 16, color: Palette.white),
+              ],
+            ),
+            title: const Text(
+              "Cross Currency Transfer",
+              style: TextStyle(
+                  color: Palette.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500),
+            ),
+            centerTitle: true,
+          );
   }
 
   SizedBox _bottomButton(screenWidth, context) {
@@ -928,7 +1398,7 @@ Widget dropDownOption(int value, String data, String currency) {
           children: [
             Text(
               data,
-              style: TextStyle(fontSize: 7.5, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 8.7, fontWeight: FontWeight.bold),
             ),
             Text(
               '$currency($number)',
@@ -956,125 +1426,122 @@ class BottomSheetContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Wrap(
-          children: [
-            Container(
-              child: Column(
-                children: [
-                  Container(
-                    height: 50,
-                    color: Colors.white,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              'Verify OTP',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.red[700],
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: IconButton(
-                            icon: Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 2,
-                    color: Colors.red[900],
-                  ),
-                  Container(
-                    color: Colors.grey[100],
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Text(
-                          'Please enter the OTP sent to the registered mobile number ${formatNumber(mobileNumber.toString())}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: 0.5 * MediaQuery.of(context).size.width,
-                          height: 40,
-                          child: TextField(
-                            controller: _otpcontroller,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(
-                                  color: Colors.grey[700]!,
-                                ),
-                              ),
-                            ),
-                            onChanged: (value) {},
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        CountdownTimer(),
-                        SizedBox(
-                          height: 60,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 40,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AppSetupPage2(),
-                        //   ),
-                        // );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                      ),
-                      child: Text(
-                        'PROCEED',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+    final scrWidth = MediaQuery.of(context).size.width;
+    final scrHeight = MediaQuery.of(context).size.height;
+    return SizedBox(
+      width: scrWidth * 0.4,
+      height: scrHeight * 0.41,
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+            color: Colors.white,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Verify OTP',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.red[700],
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ],
+                ),
+                Center(
+                  child: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                SizedBox(width: 20),
+              ],
+            ),
+          ),
+          Container(
+            height: 2,
+            color: Colors.red[900],
+          ),
+          Container(
+            color: Colors.grey[100],
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Please enter the OTP sent to the registered mobile number ${formatNumber(mobileNumber.toString())}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 40,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: scrWidth * 0.1),
+                    child: TextField(
+                      controller: _otpcontroller,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: Colors.grey[700]!,
+                          ),
+                        ),
+                      ),
+                      onChanged: (value) {},
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                CountdownTimer(),
+                SizedBox(
+                  height: 60,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: 40,
+            child: ElevatedButton(
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => AppSetupPage2(),
+                //   ),
+                // );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+              child: Text(
+                'PROCEED',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

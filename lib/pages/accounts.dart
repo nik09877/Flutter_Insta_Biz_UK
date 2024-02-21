@@ -22,6 +22,11 @@ class _AccountsPageState extends State<AccountsPage> {
   String? monthSelected;
   final _formKey = GlobalKey<FormState>();
 
+  bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 600;
+  bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 600;
+
   bool _isFormValid() {
     return _radioSelected &&
         _radioSelected1 &&
@@ -49,36 +54,50 @@ class _AccountsPageState extends State<AccountsPage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50.0),
-        child: AppBar(
-          backgroundColor: const Color.fromARGB(255, 179, 14, 14),
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.menu),
-                color: Colors.white,
-              ),
-              SizedBox(width: screenWidth * 0.2),
-              const Center(
-                child: Text(
-                  "Accounts",
-                  style: TextStyle(color: Colors.white, fontSize: 12.0),
+        child: Container(
+          // margin: isDesktop(context)
+          //     ? EdgeInsets.symmetric(horizontal: 100.0)
+          //     : null,
+          child: AppBar(
+            backgroundColor: const Color.fromARGB(255, 179, 14, 14),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.menu),
+                  color: Colors.white,
                 ),
-              ),
-            ],
-          ),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back),
-            color: Colors.white,
+                // SizedBox(
+                //     width: isDesktop(context)
+                //         ? screenWidth * 0.35
+                //         : screenWidth * 0.2),
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      "Accounts",
+                      style: TextStyle(color: Colors.white, fontSize: 12.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back),
+              color: Colors.white,
+            ),
           ),
         ),
       ),
       body: SingleChildScrollView(
         child: Container(
+          margin: isDesktop(context)
+              ? EdgeInsets.symmetric(
+                  horizontal: 0.2 * MediaQuery.of(context).size.width)
+              : null,
           alignment: Alignment.topCenter,
           child: Column(
             children: [
@@ -221,11 +240,22 @@ class _AccountsPageState extends State<AccountsPage> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Container(
-                                        width: 0.4 *
-                                            MediaQuery.of(context).size.width,
+                                        width: isDesktop(context)
+                                            ? 0.35 *
+                                                (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    (0.2 *
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width))
+                                            : 0.4 *
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width,
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 3.0),
                                         child: TextField(
@@ -251,8 +281,19 @@ class _AccountsPageState extends State<AccountsPage> {
                                         ),
                                       ),
                                       Container(
-                                        width: 0.4 *
-                                            MediaQuery.of(context).size.width,
+                                        width: isDesktop(context)
+                                            ? 0.35 *
+                                                (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    (0.2 *
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width))
+                                            : 0.4 *
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width,
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 3.0),
                                         child: TextField(
@@ -315,49 +356,59 @@ class _AccountsPageState extends State<AccountsPage> {
                                   const SizedBox(
                                     height: 4.0,
                                   ),
-                                  Container(
-                                    width:
-                                        0.8 * MediaQuery.of(context).size.width,
-                                    child: DropdownButtonFormField<String>(
-                                      decoration: const InputDecoration(
-                                        border: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color.fromARGB(
-                                                  255, 200, 188, 188)),
+                                  Align(
+                                    alignment: isDesktop(context)
+                                        ? Alignment.centerLeft
+                                        : Alignment.center,
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                          left:
+                                              isDesktop(context) ? 25.0 : 0.0),
+                                      width: isDesktop(context)
+                                          ? 400.0
+                                          : 0.8 *
+                                              MediaQuery.of(context).size.width,
+                                      child: DropdownButtonFormField<String>(
+                                        decoration: const InputDecoration(
+                                          border: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 200, 188, 188)),
+                                          ),
+                                          hintText: "Choose month",
+                                          hintStyle: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 200, 188, 188),
+                                            fontSize: 10.0,
+                                          ),
                                         ),
-                                        hintText: "Choose month",
-                                        hintStyle: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 200, 188, 188),
-                                          fontSize: 10.0,
-                                        ),
+                                        value: monthSelected,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            monthSelected = value;
+                                          });
+                                        },
+                                        items: <String>[
+                                          '00',
+                                          '01',
+                                          '02',
+                                          '03',
+                                          '04',
+                                          '05',
+                                          '06',
+                                          '07',
+                                          '08',
+                                          '09',
+                                          '10',
+                                          '11',
+                                          '12'
+                                        ].map((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
                                       ),
-                                      value: monthSelected,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          monthSelected = value;
-                                        });
-                                      },
-                                      items: <String>[
-                                        '00',
-                                        '01',
-                                        '02',
-                                        '03',
-                                        '04',
-                                        '05',
-                                        '06',
-                                        '07',
-                                        '08',
-                                        '09',
-                                        '10',
-                                        '11',
-                                        '12'
-                                      ].map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
                                     ),
                                   ),
                                   Expanded(
@@ -365,8 +416,10 @@ class _AccountsPageState extends State<AccountsPage> {
                                     width: MediaQuery.of(context).size.width,
                                   )),
                                   SizedBox(
-                                    width:
-                                        0.9 * MediaQuery.of(context).size.width,
+                                    width: isDesktop(context)
+                                        ? 400.0
+                                        : 0.9 *
+                                            MediaQuery.of(context).size.width,
                                     child: ElevatedButton(
                                       // onPressed: _isFormValid() ? () {
 

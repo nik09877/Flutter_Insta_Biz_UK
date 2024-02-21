@@ -49,6 +49,11 @@ class _fundtransferState extends State<fundtransfer> {
     23456789: 'SDFSDF',
   };
 
+  bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 600;
+  bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 600;
+
   @override
   void initState() {
     getAllAccounts(widget.userId);
@@ -390,294 +395,361 @@ class _fundtransferState extends State<fundtransfer> {
           ),
         ),
         body: payers != null && userAccounts != null
-            ? Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.fromLTRB(16, 30, 16, 0),
-                              child: Form(
-                                key: _formKey,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('From',
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.grey)),
-                                    SizedBox(height: 25),
-                                    Text('Current Account',
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.grey)),
-                                    // builddropdown("Account Number", ['75617697','76261111','76260962','76260961','76260960','76261108','76261086','76261113'], 'dropdownkey1'),
-                                    Container(
-                                      width: 0.95 *
-                                          MediaQuery.of(context).size.width,
-                                      child: DropdownButtonFormField<String>(
-                                        decoration: const InputDecoration(
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.grey,
+            ? Container(
+                margin: isDesktop(context)
+                    ? EdgeInsets.symmetric(
+                        horizontal: 0.2 * MediaQuery.of(context).size.width)
+                    : null,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.fromLTRB(16, 30, 16, 0),
+                                child: Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('From',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey)),
+                                      SizedBox(height: 25),
+                                      Text('Current Account',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey)),
+                                      // builddropdown("Account Number", ['75617697','76261111','76260962','76260961','76260960','76261108','76261086','76261113'], 'dropdownkey1'),
+                                      Container(
+                                        width: isDesktop(context)
+                                            ? 400.0
+                                            : 0.95 *
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                        child: DropdownButtonFormField<String>(
+                                          decoration: const InputDecoration(
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                            hintText: "Account Number",
+                                            hintStyle: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  224, 224, 224, 1),
+                                              fontSize: 14.0,
                                             ),
                                           ),
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                          hintText: "Account Number",
-                                          hintStyle: TextStyle(
-                                            color: Color.fromRGBO(
-                                                224, 224, 224, 1),
-                                            fontSize: 14.0,
+                                          key: Key('dropdownkey1'),
+                                          value: dropdownValues['dropdownkey1'],
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              dropdownValues['dropdownkey1'] =
+                                                  newValue!;
+                                              currentAccountSelected = true;
+                                              int accNo = int.parse(
+                                                  newValue.split(' ')[0]);
+                                              currentAccount = userAccounts
+                                                  ?.firstWhere((acc) =>
+                                                      acc.accountNumber ==
+                                                      accNo);
+                                            });
+                                          },
+                                          items: userAccounts?.map((acc) {
+                                            String value =
+                                                "${acc.accountNumber} (${acc.currency}) - ${acc.branch}";
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    // width: 0.7 *
+                                                    //     MediaQuery.of(context)
+                                                    //         .size
+                                                    //         .width,
+                                                    child: Text(
+                                                      value,
+                                                      style: TextStyle(
+                                                          fontSize: 12),
+                                                    ),
+                                                  ),
+                                                  if (radioVal != value)
+                                                    Radio<String>(
+                                                      value: value,
+                                                      groupValue: radioVal,
+                                                      onChanged:
+                                                          (String? newValue) {
+                                                        setState(() {
+                                                          radioVal = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Visibility(
+                                        visible: currentAccountSelected,
+                                        child: Text(
+                                          'Available Balance \u20Ac${currentAccount != null ? currentAccount!.balance : ''}',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 12,
                                           ),
                                         ),
-                                        key: Key('dropdownkey1'),
-                                        value: dropdownValues['dropdownkey1'],
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            dropdownValues['dropdownkey1'] =
-                                                newValue!;
-                                            currentAccountSelected = true;
-                                            int accNo = int.parse(
-                                                newValue.split(' ')[0]);
-                                            currentAccount = userAccounts
-                                                ?.firstWhere((acc) =>
-                                                    acc.accountNumber == accNo);
-                                          });
-                                        },
-                                        items: userAccounts?.map((acc) {
-                                          String value =
-                                              "${acc.accountNumber} (${acc.currency}) - ${acc.branch}";
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  width: 0.7 *
+                                      ),
+                                      SizedBox(height: 20),
+                                      _customRadio('ICICI Bank Self/BFX', 1),
+                                      SizedBox(height: 30),
+                                      _customRadio('Benefeciary CHAPS', 2),
+                                      SizedBox(height: 30),
+                                      _customRadio('Same day Payee', 3),
+                                      SizedBox(height: 30),
+                                      Text('Transfer To',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey)),
+                                      SizedBox(height: 20),
+                                      Container(
+                                        width: isDesktop(context)
+                                            ? 400.0
+                                            : 0.95 *
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                        child: DropdownButtonFormField<String>(
+                                          key: Key('dropdownKey4'),
+                                          value: dropdownValues['dropdownkey4'],
+                                          onChanged: (value) {
+                                            setState(() {
+                                              dropdownValues['dropdownkey4'] =
+                                                  value!;
+                                              isPayeeSelected =
+                                                  !isPayeeSelected;
+                                            });
+                                          },
+                                          hint: Text('Select Payee',
+                                              style: TextStyle(
+                                                  color: const Color.fromARGB(
+                                                      255, 139, 135, 135),
+                                                  fontSize: 14)),
+                                          items: payers!.map((payer) {
+                                            return DropdownMenuItem<String>(
+                                              value: payer.accountNumber
+                                                  .toString(),
+                                              child: dropDownOption(
+                                                  int.parse(
+                                                      payer.accountNumber),
+                                                  payer.payerName,
+                                                  payer.currency),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: TextButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddPayee()));
+                                            },
+                                            child: Text('Add Payee',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.red[600],
+                                                    fontWeight: FontWeight.bold,
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    decorationColor:
+                                                        Colors.red[600]))),
+                                      ),
+                                      SizedBox(height: 20),
+                                      Visibility(
+                                        visible: isPayeeSelected,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              width: isDesktop(context)
+                                                  ? 400.0
+                                                  : 0.95 *
                                                       MediaQuery.of(context)
                                                           .size
                                                           .width,
-                                                  child: Text(
-                                                    value,
-                                                    style:
-                                                        TextStyle(fontSize: 12),
+                                              child: TextFormField(
+                                                controller: amountValue,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            174,
+                                                            164,
+                                                            164)),
                                                   ),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.red),
+                                                  ),
+                                                  labelText: "Amount",
+                                                  labelStyle: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Color.fromARGB(
+                                                        255, 174, 164, 164),
+                                                  ),
+                                                  hintText: '\u20Ac0.01',
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Color.fromARGB(
+                                                        255, 174, 164, 164),
+                                                  ),
+                                                  floatingLabelBehavior:
+                                                      FloatingLabelBehavior
+                                                          .always,
                                                 ),
-                                                if (radioVal != value)
-                                                  Radio<String>(
-                                                    value: value,
-                                                    groupValue: radioVal,
-                                                    onChanged:
-                                                        (String? newValue) {
-                                                      setState(() {
-                                                        radioVal = value;
-                                                      });
-                                                    },
-                                                  ),
-                                              ],
+                                                onChanged: (value) {
+                                                  _formKey.currentState!
+                                                      .validate();
+                                                },
+                                                validator: (value) {
+                                                  if (value == null)
+                                                    return "Enter Amount";
+                                                  if (!amountRegex
+                                                      .hasMatch(value)) {
+                                                    return 'Enter a valid amount';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
                                             ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Visibility(
-                                      visible: currentAccountSelected,
-                                      child: Text(
-                                        'Available Balance \u20Ac${currentAccount != null ? currentAccount!.balance : ''}',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 12,
+                                            SizedBox(
+                                              height: 5.0,
+                                            ),
+                                            Text('Remarks',
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.grey)),
+                                            Container(
+                                              width: isDesktop(context)
+                                                  ? 400.0
+                                                  : 0.95 *
+                                                      MediaQuery.of(context)
+                                                          .size
+                                                          .width,
+                                              child: builddropdown(
+                                                  "Remarks",
+                                                  [
+                                                    'option 1',
+                                                    'option 2',
+                                                    'option 3'
+                                                  ],
+                                                  'dropdownkey3'),
+                                            ),
+                                            SizedBox(
+                                              height: 5.0,
+                                            ),
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(bottom: 10.0),
+                                              width: isDesktop(context)
+                                                  ? 400.0
+                                                  : 0.95 *
+                                                      MediaQuery.of(context)
+                                                          .size
+                                                          .width,
+                                              child: TextFormField(
+                                                controller: remarks,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            174,
+                                                            164,
+                                                            164)),
+                                                  ),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.red),
+                                                  ),
+                                                  hintText:
+                                                      'Please enter remarks',
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Color.fromARGB(
+                                                        255, 174, 164, 164),
+                                                  ),
+                                                  floatingLabelBehavior:
+                                                      FloatingLabelBehavior
+                                                          .always,
+                                                ),
+                                                onChanged: (value) {},
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    _customRadio('ICICI Bank Self/BFX', 1),
-                                    SizedBox(height: 30),
-                                    _customRadio('Benefeciary CHAPS', 2),
-                                    SizedBox(height: 30),
-                                    _customRadio('Same day Payee', 3),
-                                    SizedBox(height: 30),
-                                    Text('Transfer To',
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.grey)),
-                                    SizedBox(height: 20),
-                                    DropdownButtonFormField<String>(
-                                      key: Key('dropdownKey4'),
-                                      value: dropdownValues['dropdownkey4'],
-                                      onChanged: (value) {
-                                        setState(() {
-                                          dropdownValues['dropdownkey4'] =
-                                              value!;
-                                          isPayeeSelected = !isPayeeSelected;
-                                        });
-                                      },
-                                      hint: Text('Select Payee',
-                                          style: TextStyle(
-                                              color: const Color.fromARGB(
-                                                  255, 139, 135, 135),
-                                              fontSize: 14)),
-                                      items: payers!.map((payer) {
-                                        return DropdownMenuItem<String>(
-                                          value: payer.accountNumber.toString(),
-                                          child: dropDownOption(
-                                              int.parse(payer.accountNumber),
-                                              payer.payerName,
-                                              payer.currency),
-                                        );
-                                      }).toList(),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: TextButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddPayee()));
-                                          },
-                                          child: Text('Add Payee',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.red[600],
-                                                  fontWeight: FontWeight.bold,
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  decorationColor:
-                                                      Colors.red[600]))),
-                                    ),
-                                    SizedBox(height: 20),
-                                    Visibility(
-                                      visible: isPayeeSelected,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextFormField(
-                                            controller: amountValue,
-                                            decoration: const InputDecoration(
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color.fromARGB(
-                                                        255, 174, 164, 164)),
-                                              ),
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.red),
-                                              ),
-                                              labelText: "Amount",
-                                              labelStyle: TextStyle(
-                                                fontSize: 12,
-                                                color: Color.fromARGB(
-                                                    255, 174, 164, 164),
-                                              ),
-                                              hintText: '\u20Ac0.01',
-                                              hintStyle: TextStyle(
-                                                fontSize: 10,
-                                                color: Color.fromARGB(
-                                                    255, 174, 164, 164),
-                                              ),
-                                              floatingLabelBehavior:
-                                                  FloatingLabelBehavior.always,
-                                            ),
-                                            onChanged: (value) {
-                                              _formKey.currentState!.validate();
-                                            },
-                                            validator: (value) {
-                                              if (value == null)
-                                                return "Enter Amount";
-                                              if (!amountRegex
-                                                  .hasMatch(value)) {
-                                                return 'Enter a valid amount';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                          SizedBox(
-                                            height: 5.0,
-                                          ),
-                                          Text('Remarks',
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: Colors.grey)),
-                                          builddropdown(
-                                              "Remarks",
-                                              [
-                                                'option 1',
-                                                'option 2',
-                                                'option 3'
-                                              ],
-                                              'dropdownkey3'),
-                                          SizedBox(
-                                            height: 5.0,
-                                          ),
-                                          TextFormField(
-                                            controller: remarks,
-                                            decoration: const InputDecoration(
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color.fromARGB(
-                                                        255, 174, 164, 164)),
-                                              ),
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.red),
-                                              ),
-                                              hintText: 'Please enter remarks',
-                                              hintStyle: TextStyle(
-                                                fontSize: 10,
-                                                color: Color.fromARGB(
-                                                    255, 174, 164, 164),
-                                              ),
-                                              floatingLabelBehavior:
-                                                  FloatingLabelBehavior.always,
-                                            ),
-                                            onChanged: (value) {},
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 40,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // _formKey.currentState!.validate();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                      ),
-                      child: Text(
-                        'PROCEED',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    Container(
+                      margin: EdgeInsets.only(bottom: 10.0),
+                      width: isDesktop(context)
+                          ? 400.0
+                          : 0.9 * MediaQuery.of(context).size.width,
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // _formKey.currentState!.validate();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                        ),
+                        child: Text(
+                          'PROCEED',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               )
             : const Center(child: CircularProgressIndicator()));
   }
