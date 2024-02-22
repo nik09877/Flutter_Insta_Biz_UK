@@ -8,6 +8,7 @@ import 'package:local_auth/local_auth.dart';
 import 'instabiz.dart';
 // import 'package:url_launcher/url_launcher.dart';
 import 'loginpage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AppSetupPage1 extends StatefulWidget {
   const AppSetupPage1({Key? key}) : super(key: key);
@@ -870,6 +871,8 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
 
   @override
   Widget build(BuildContext context) {
+    const isWeb = kIsWeb;
+
     double sw = MediaQuery.of(context).size.width; //screen width
     return Scaffold(
       body: Container(
@@ -1004,13 +1007,14 @@ class _AppSetupPage2State extends State<AppSetupPage2> {
                                 // http.put(
                                 //     Uri.parse('http://192.168.226.12:3000/users/'),
                                 //     body: {});
-                                callbottomsheet();
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //       builder: (context) => InstaBIZPage(
-                                //           userId: widget.user['userId']),
-                                //     ));
+                                !isWeb
+                                    ? callbottomsheet()
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => InstaBIZPage(
+                                              userId: widget.user['userId']),
+                                        ));
                               }
                             : null,
                     style: ElevatedButton.styleFrom(
