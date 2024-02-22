@@ -1149,7 +1149,7 @@ class _CrossCurrencyScreenState extends State<CrossCurrencyScreen> {
                                     builder: (BuildContext context) {
                                       return Dialog(
                                         shape: RoundedRectangleBorder(),
-                                        child: BottomSheetContent(),
+                                        child: BottomSheetContent2(),
                                       );
                                     },
                                   );
@@ -1411,7 +1411,7 @@ Widget dropDownOption(int value, String data, String currency) {
   );
 }
 
-class BottomSheetContent extends StatelessWidget {
+class BottomSheetContent2 extends StatelessWidget {
   final _otpcontroller = TextEditingController();
   final mobileNumber = 9876543210;
 
@@ -1605,4 +1605,326 @@ class Palette {
   static const Color grey = Color.fromARGB(255, 126, 137, 153);
   static const Color navyBlue = Color(0xff0A1016);
   static const Color deepBlue = Color(0xff2E4B5D);
+}
+
+// class BottomSheetContent extends StatelessWidget {
+//   final _otpcontroller = TextEditingController();
+//   final mobileNumber = 9876543210;
+
+//   String formatNumber(String number) {
+//     List<String> digits = number.split('');
+//     digits[2] = '*';
+//     digits[3] = '*';
+//     digits[6] = '*';
+//     digits[7] = '*';
+//     return digits.join();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       resizeToAvoidBottomInset: true,
+//       body: SingleChildScrollView(
+//         child: Wrap(
+//           children: [
+//             Container(
+//               child: Column(
+//                 children: [
+//                   Container(
+//                     height: 50,
+//                     color: Colors.white,
+//                     child: Row(
+//                       children: [
+//                         Expanded(
+//                           child: Center(
+//                             child: Text(
+//                               'Verify OTP',
+//                               style: TextStyle(
+//                                 fontSize: 14,
+//                                 color: Colors.red[700],
+//                                 fontWeight: FontWeight.bold,
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                         Center(
+//                           child: IconButton(
+//                             icon: Icon(Icons.close),
+//                             onPressed: () {
+//                               Navigator.pop(context);
+//                             },
+//                           ),
+//                         ),
+//                         SizedBox(width: 20),
+//                       ],
+//                     ),
+//                   ),
+//                   Container(
+//                     height: 2,
+//                     color: Colors.red[900],
+//                   ),
+//                   Container(
+//                     color: Colors.grey[100],
+//                     child: Column(
+//                       children: [
+//                         SizedBox(
+//                           height: 30,
+//                         ),
+//                         Text(
+//                           'Please enter the OTP sent to the registered mobile number ${formatNumber(mobileNumber.toString())}',
+//                           textAlign: TextAlign.center,
+//                           style: TextStyle(
+//                             fontSize: 14,
+//                             color: Colors.grey[700],
+//                           ),
+//                         ),
+//                         SizedBox(
+//                           height: 20,
+//                         ),
+//                         Container(
+//                           width: 0.5 * MediaQuery.of(context).size.width,
+//                           height: 40,
+//                           child: TextField(
+//                             controller: _otpcontroller,
+//                             maxLength: 6,
+//                             keyboardType: TextInputType.number,
+//                             decoration: InputDecoration(
+//                               filled: true,
+//                               fillColor: Colors.white,
+//                               border: OutlineInputBorder(
+//                                 borderRadius: BorderRadius.circular(8),
+//                                 borderSide: BorderSide(
+//                                   color: Colors.grey[700]!,
+//                                 ),
+//                               ),
+//                             ),
+//                             onChanged: (value) {},
+//                           ),
+//                         ),
+//                         SizedBox(
+//                           height: 20,
+//                         ),
+//                         CountdownTimer(),
+//                         SizedBox(
+//                           height: 60,
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   SizedBox(
+//                     width: double.infinity,
+//                     height: 40,
+//                     child: ElevatedButton(
+//                       onPressed: () {
+//                         // Navigator.push(
+//                         //   context,
+//                         //   MaterialPageRoute(
+//                         //     builder: (context) => AppSetupPage2(),
+//                         //   ),
+//                         // );
+//                       },
+//                       style: ElevatedButton.styleFrom(
+//                         primary: Colors.blue,
+//                         shape: RoundedRectangleBorder(
+//                           borderRadius: BorderRadius.circular(4.0),
+//                         ),
+//                       ),
+//                       child: Text(
+//                         'PROCEED',
+//                         style: TextStyle(
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class BottomSheetContent extends StatefulWidget {
+  // final Map<String, dynamic> user;
+
+  // BottomSheetContent({});
+
+  @override
+  _BottomSheetContentState createState() => _BottomSheetContentState();
+}
+
+class _BottomSheetContentState extends State<BottomSheetContent> {
+  final _otpcontroller = TextEditingController();
+  final mobileNumber = 9876543210;
+  bool isOTPEntered = false;
+  // late Map<String, dynamic> user;
+
+  @override
+  void dispose() {
+    _otpcontroller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // user = widget.user;
+  }
+
+  String formatNumber(String number) {
+    List<String> digits = number.split('');
+    digits[2] = '*';
+    digits[3] = '*';
+    digits[6] = '*';
+    digits[7] = '*';
+    return digits.join();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Wrap(
+          children: [
+            Container(
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              'Verify OTP',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.red[700],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 2,
+                    color: Colors.red[900],
+                  ),
+                  Container(
+                    color: Colors.grey[100],
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Text(
+                          'Please enter the OTP sent to the registered mobile number ${formatNumber(mobileNumber.toString())}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          width: 0.5 * MediaQuery.of(context).size.width,
+                          height: 40,
+                          child: TextField(
+                            controller: _otpcontroller,
+                            maxLength: 6,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              counterText: '',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[700]!,
+                                ),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                isOTPEntered = value.length == 6;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CountdownTimer(),
+                        const SizedBox(
+                          height: 60,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 0.36 * MediaQuery.of(context).size.width,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: isOTPEntered
+                          ? () {
+                              //   if (user['mpin'] == null) {
+                              //     Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //         builder: (context) =>
+                              //             AppSetupPage2(user: user),
+                              //       ),
+                              //     );
+                              //   } else {
+                              //     Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //         builder: (context) => LoginPage(user: user),
+                              //       ),
+                              //     );
+                              //   }
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        primary: isOTPEntered ? Colors.blue : Colors.grey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      child: const Text(
+                        'PROCEED',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
